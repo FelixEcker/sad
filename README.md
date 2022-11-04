@@ -25,16 +25,16 @@ program like this. Formatting is handled through `mode-switches` in plain text.
 {$start}
 {$title} Test Note
 
-{$begin-section}
+{$begin-section} test-section
 {$head} This is a Section of Text
 Just some test text. This should be {$style bold} bold {$style default}
 This should be {$style italic} italic {$style default}
 {$color yellow} and this should {$color blue back} be some color {$reset}
 {$end-section}
 
-{$begin-section}
+{$begin-section} test-section-2
 {$head} Another Section
-{$begin-section}
+{$begin-section} sub-section-1
 {$sub-head} Subsection of Section above
 
 Lorum ipsum, im a subsection!
