@@ -1,5 +1,5 @@
 #!/usr/bin/bash
 
 ./clean
-fpc -O4 src/snf.pas -FE"out/"
-mv out/snf ./snf
+fpc -O4 src/sadv.pas -FE"out/"
+mv out/sadv ./sadv

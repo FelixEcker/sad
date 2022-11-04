@@ -1,5 +1,5 @@
 {$mode objfpc}
-unit uSNFParser;
+unit uSADParser;
 
 interface
   uses StrUtils, SysUtils, Types;
@@ -7,7 +7,7 @@ interface
   type
     EMalformedDocumentException = Class(Exception);
     ENoSuchSectionException = Class(Exception);
-    TSNFMeta = record
+    TSADMeta = record
       default_style: Integer;
       default_fore: Integer;
       default_back: Integer;
@@ -19,7 +19,7 @@ interface
 
       author, date: String;
     end;
-    TSNFParser = class
+    TSADParser = class
       private
         FFile: TextFile;
         FFilePath: String;
@@ -31,7 +31,7 @@ interface
         FLineNumber: Integer;
         FLine: String;
 
-        FMetaData: TSNFMeta;
+        FMetaData: TSADMeta;
 
         function IsEOF: Boolean;
         function StyleStrToInt(const AStr: String): Integer;
@@ -48,7 +48,7 @@ interface
         property Path: String read FFilePath write SetFile;
         property Section: String read FParseSection write FParseSection;
         property ReachedEOF: Boolean read IsEOF;
-        property MetaData: TSNFMeta read FMetaData;
+        property MetaData: TSADMeta read FMetaData;
     end;
 
     const
@@ -113,9 +113,9 @@ interface
       bcWhite        = 107;
 
 implementation
-  { TSNFParser }
+  { TSADParser }
 
-  constructor TSNFParser.Create;
+  constructor TSADParser.Create;
   begin
     FParseSection := '.';
     FMetaData.author := 'N/A';
@@ -129,18 +129,18 @@ implementation
     FMetaData.sub_head_color := #27'[39m';
   end;
 
-  destructor TSNFParser.Free;
+  destructor TSADParser.Free;
   begin
     Close(FFile);
   end;
 
-  procedure TSNFParser.SetFile(const Value: String);
+  procedure TSADParser.SetFile(const Value: String);
   begin
     FFilePath := Value;
     Assign(FFile, FFilePath);
   end;
 
-  procedure TSNFParser.Open;
+  procedure TSADParser.Open;
   var
     split: TStringDynArray;
     i: Integer;
@@ -201,7 +201,7 @@ implementation
     end;
   end;
 
-  function TSNFParser.NextLine: String;
+  function TSADParser.NextLine: String;
   var
     i, skipWords: Integer;
     isBack, addReset: Boolean;
@@ -303,7 +303,7 @@ implementation
     if addReset then result := result + #27'['+IntToStr(tsResetAll)+'m';
   end;
 
-  function TSNFParser.FinishedRequiredSection: Boolean;
+  function TSADParser.FinishedRequiredSection: Boolean;
   var
     sect: String;
   begin
@@ -317,12 +317,12 @@ implementation
 
   { private }
 
-  function TSNFParser.IsEOF: Boolean;
+  function TSADParser.IsEOF: Boolean;
   begin
     result := eof(FFile);
   end;
 
-  function TSNFParser.StyleStrToInt(const AStr: String): Integer;
+  function TSADParser.StyleStrToInt(const AStr: String): Integer;
   begin
     case AStr of
       'default':     result := FMetaData.default_style;
@@ -350,7 +350,7 @@ implementation
     end;
   end;
 
-  function TSNFParser.ColorStrToInt(const AStr: String; const AIsBack: Boolean): Integer;
+  function TSADParser.ColorStrToInt(const AStr: String; const AIsBack: Boolean): Integer;
   begin
     case AStr of
       'default':      begin if AIsBack then result := FMetaData.default_back else result := FMetaData.default_fore; end;

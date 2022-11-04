@@ -1,13 +1,13 @@
 {$mode objfpc}
-program snf;
+program sadv;
 
-uses SysUtils, uSNFParser;
+uses SysUtils, uSADParser;
 
 var
   i, lastparam: Integer;
   path, _line, required_section, cparam: String;
   print_meta: Boolean;
-  parser: TSNFParser;
+  parser: TSADParser;
 begin
   if (ParamCount() = 0) then
   begin
@@ -34,7 +34,7 @@ begin
       print_meta := True;
   end;
 
-  parser := TSNFParser.Create;
+  parser := TSADParser.Create;
   parser.Path := path;
   parser.Section := required_section;
   parser.Open;
