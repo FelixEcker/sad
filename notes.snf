@@ -1,0 +1,24 @@
+{$comment Default Style, White Foreground, Default background}
+{$default default white default}
+{$meta date} 02-11-2022
+{$meta author} FelixEcker
+{$start}
+{$title} Test Note
+
+{$begin-section} section-name
+{$head} This is a Section of Text
+Just some test text. This should be {$style bold} bold {$style default}
+This should be {$style italic} italic {$style default}
+{$color yellow} and this should {$color blue back} be some color {$reset}
+{$end-section}
+
+{$begin-section} section2-name
+{$head} Another Section
+{$begin-section} section3-nme
+{$sub-head} Subsection of Section above
+
+Lorum ipsum, im a subsection!
+{$end-section}
+
+and im not in the subsection anymore
+{$end-section}

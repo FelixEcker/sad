@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+./build
+./snf notes.snf -pm :.
