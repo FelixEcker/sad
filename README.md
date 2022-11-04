@@ -1,8 +1,8 @@
-# SNF
-*(S)imple (N)ote (F)ormat*
+# SAD
+*(S)imple (A)nsi (D)ocument *
 
 ## About
-SNF is a document-format, designed to be displayed in ANSI compatible terminals through a viewer
+SAD is a document-format, designed to be displayed in ANSI compatible terminals through a viewer
 program like this. Formatting is handled through `mode-switches` in plain text.
 
 ## Features and Limitations
