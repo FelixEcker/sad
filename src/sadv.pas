@@ -34,13 +34,14 @@ program sadv;
 (* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *)
 
 
-uses SysUtils, uSADParser;
+uses SysUtils, Types, uSADParser;
 
 var
   i, lastparam: Integer;
   path, _line, required_section, cparam: String;
   print_meta: Boolean;
   parser: TSADParser;
+  content: TStringDynArray;
 begin
   if (ParamCount() = 0) then
   begin
@@ -79,8 +80,7 @@ begin
     writeln;
   end;
 
-  while not parser.ReachedEOF and not parser.FinishedRequiredSection() do
-  begin
-    writeln(parser.nextline());
-  end;
+  content := parser.ParseFile;
+  for _line in content do
+    writeln(_line);
 end.

@@ -1,5 +1,3 @@
-{$comment Default Style, White Foreground, Default background}
-{$default default white default}
 {$meta date} 02-11-2022
 {$meta author} FelixEcker
 {$start}
@@ -7,8 +5,8 @@
 
 {$begin-section} section-name
 {$head} This is a Section of Text
-Just some test text. This should be {$style bold} bold {$style default}
-This should be {$style italic} italic {$style default}
+Just some test text. This should be {$style bold} bold {$reset}
+This should be {$style italic} italic {$reset}
 {$color yellow} and this should {$color blue back} be some color {$reset}
 {$end-section}
 
