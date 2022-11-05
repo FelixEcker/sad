@@ -2,4 +2,4 @@
 
 rm -rf out/
 mkdir out
-rm SNF
+rm sadv

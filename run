@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 
 ./build
-./sadv notes.snf -pm :.
+./sadv notes.sad -pm :.

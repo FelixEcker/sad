@@ -1,6 +1,39 @@
 {$mode objfpc}
 unit uSADParser;
 
+{  uSADParser.pas ; Pascal Parser for Simple-Ansi-Documents  }
+{                                                            }
+{ Author: Felix Eckert                                       }
+{ Written for sadv (SAD-Viewer), licensed under the 3-Clause }
+{ BSD License. See below.                                    }
+
+(* Copyright (c) 2022, Felix Eckert                                               *)
+(*                                                                                *)
+(* Redistribution and use in source and binary forms, with or without             *)
+(* modification, are permitted provided that the following conditions are met:    *)
+(*                                                                                *)
+(* 1. Redistributions of source code must retain the above copyright notice, this *)
+(*    list of conditions and the following disclaimer.                            *)
+(*                                                                                *)
+(* 2. Redistributions in binary form must reproduce the above copyright notice,   *)
+(*    this list of conditions and the following disclaimer in the documentation   *)
+(*    and/or other materials provided with the distribution.                      *)
+(*                                                                                *)
+(* 3. Neither the name of the copyright holder nor the names of its               *)
+(*    contributors may be used to endorse or promote products derived from        *)
+(*    this software without specific prior written permission.                    *)
+(*                                                                                *)
+(* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"    *)
+(* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE      *)
+(* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE *)
+(* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE   *)
+(* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL     *)
+(* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR     *)
+(* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER     *)
+(* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  *)
+(* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  *)
+(* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *)
+
 interface
   uses StrUtils, SysUtils, Types;
 
@@ -241,7 +274,7 @@ implementation
             exit(NextLine()+sLineBreak); 
           end;
 
-          '{title}': begin
+          '{$title}': begin
             addReset := True;
             result := result + FMetaData.head_color + FMetaData.head_style;
           end;
@@ -300,6 +333,7 @@ implementation
         result := result + lsplit[i] + ' ';
     end;
 
+    result := Copy(result, 1, Length(result)-1); // remove trailing space
     if addReset then result := result + #27'['+IntToStr(tsResetAll)+'m';
   end;
 
