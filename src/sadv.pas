@@ -39,7 +39,7 @@ uses SysUtils, Types, uSADParser;
 var
   i, lastparam: Integer;
   path, _line, required_section, cparam: String;
-  print_meta: Boolean;
+  print_meta, print_lines: Boolean;
   parser: TSADParser;
   content: TStringDynArray;
 begin
@@ -50,7 +50,9 @@ begin
     writeln;
     writeln('Parameters: ');
     writeln('-pm, --meta   Print Meta-Information');
+    writeln('-l,  --lines  Print Line-Numbers');
     writeln;
+    halt;
   end;
 
   path := ParamStr(1);
@@ -65,7 +67,9 @@ begin
     end;
 
     if (cparam = '-pm') or (cparam = '--meta') then
-      print_meta := True;
+      print_meta := True
+    else if (cparam = '-l') or (cparam = '--lines') then
+      print_lines := True;
   end;
 
   parser := TSADParser.Create;
@@ -85,8 +89,7 @@ begin
   for _line in content do
   begin
     i := i + 1;
-    write(i);
-    write('  ');
+    if print_lines then write(Format('%.3d  ', [i]));
     writeln(_line);
   end;
 end.
