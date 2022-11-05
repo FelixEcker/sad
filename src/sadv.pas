@@ -80,7 +80,13 @@ begin
     writeln;
   end;
 
+  i := 0;
   content := parser.ParseFile;
   for _line in content do
+  begin
+    i := i + 1;
+    write(i);
+    write('  ');
     writeln(_line);
+  end;
 end.

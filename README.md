@@ -18,23 +18,22 @@ program like this. Formatting is handled through `mode-switches` in plain text.
 
 ## Example
 ```text
-{$comment Default Style, White Foreground, Default background}
-{$default default white default}
 {$meta date} 02-11-2022
 {$meta author} FelixEcker
+{$preserve-mode style}
 {$start}
 {$title} Test Note
 
-{$begin-section} test-section
+{$begin-section} section-name
 {$head} This is a Section of Text
-Just some test text. This should be {$style bold} bold {$style default}
-This should be {$style italic} italic {$style default}
-{$color yellow} and this should {$color blue back} be some color {$reset}
+Just some test text. This should be {$style bold} bold {$reset}
+This should be {$style italic} italic {$reset-all}
+{$color yellow} and this should {$color blue back} be some color {$reset-all}
 {$end-section}
 
-{$begin-section} test-section-2
+{$begin-section} section2-name
 {$head} Another Section
-{$begin-section} sub-section-1
+{$begin-section} section3-nme
 {$sub-head} Subsection of Section above
 
 Lorum ipsum, im a subsection!
@@ -44,18 +43,29 @@ and im not in the subsection anymore
 {$end-section}
 ```
 
-## Commands
+## Switches
+### Header
+* meta `<name> <content (single-word)>`
+    * Sets some meta information
+* preserve-mode `style/color`
+    * Sets whether to preserve the current style or color when the `reset` switch is executed
+
+### In Text
 * title
 	* Sets the overall title of the note
-* begin-section `<section-header>`
+* begin-section `<section-name>`
 	* Starts a new section in the file with given header
 * end-section
 	* Closes the current section
-* default `<default style> <default color> <default color (back>`
-	* Defines the defaults that `reset` reverts to
+* head
+    * Format rest of line as header. Has to come first in line
+* sub-head
+    * Format rest of line as sub-header. Has to come first in line
 * style `<style name>`
 	* Sets the Text-Style
 * color `<color name> <(optional) back/fore>`
 	* Sets the Text-Color to the appropriate ansi color
 * reset
-	* Resets all formatting to default
+	* Resets all formatting to default (regards preserve-mode)
+* reset-all
+    * Resets all formatting to default (disregards preverse-mode)

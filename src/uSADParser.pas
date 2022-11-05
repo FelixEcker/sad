@@ -63,6 +63,12 @@ interface
 
         FMetaData: TSADMeta;
 
+        FLastColor: String;
+        FLastStyle: String;
+
+        // 0: None, 1: Style, 2: Color
+        FPreserveMode: Byte;
+
         function IsEOF: Boolean;
         function StyleToStr(const AStr: String): String;
         function StyleToInt(const AStr: String): Integer;
@@ -159,6 +165,7 @@ implementation
     FMetaData.head_color := #27'[39m';;
     FMetaData.sub_head_style := #27'[4m';
     FMetaData.sub_head_color := #27'[39m';
+    FPreserveMode := 0;
   end;
 
   destructor TSADParser.Free;
@@ -206,6 +213,14 @@ implementation
           end;
         end;
         '{$comment': continue;
+        '{$preserve-mode': begin
+          case split[1] of
+            'style}': FPreserveMode := 1;
+            'color}': FPreserveMode := 2;
+          else
+            FPreserveMode := 0;
+          end;
+        end;
       end;
     end;
 
@@ -304,12 +319,22 @@ implementation
             else
               lsplit[i+1] := Copy(lsplit[i+1], 1, Length(lsplit[i+1])-1);
 
+            FLastColor :=  #27'['+IntToStr(ColorStrToInt(
+                lsplit[i+1], isBack))+'m';
             result := result + #27'['+IntToStr(ColorStrToInt(
                 lsplit[i+1], isBack))+'m'
           end;
 
-          // ANSI Reset All
-          '{$reset}':
+          // Reset with preserves
+          '{$reset}': begin
+            result := Copy(result, 1, Length(result)-1) + Format(#27'[%dm', [tsResetAll]) + ' ';
+            case FPreserveMode of
+              1: result := result + FLastStyle;
+              2: result := result + FLastColor;
+            end;
+          end;
+
+          '{$reset-all}':
             result := Copy(result, 1, Length(result)-1) + Format(#27'[%dm', [tsResetAll]) + ' ';
 
           // Text-Styling
@@ -319,7 +344,8 @@ implementation
 
             skipWords := 1;
 
-            result := result + StyleToStr(Copy(lsplit[i+1], 1, Length(lsplit[i+1])-1));
+            FLastStyle := StyleToStr(Copy(lsplit[i+1], 1, Length(lsplit[i+1])-1));
+            result := result + FLastStyle;
           end;
         end;
       end else if (StartsStr('{{$', lsplit[i])) then
@@ -328,7 +354,10 @@ implementation
         result := result + lsplit[i] + ' ';
     end;
 
-    result := Copy(result, 1, Length(result)-1); // remove trailing space
+    // Remove trailing spaces
+    while (result[Length(result)] = ' ') do
+      result := Copy(result, 1, Length(result)-1);
+
     if addReset then result := result + #27'['+IntToStr(tsResetAll)+'m';
   end;
 

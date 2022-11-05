@@ -1,13 +1,14 @@
 {$meta date} 02-11-2022
 {$meta author} FelixEcker
+{$preserve-mode style}
 {$start}
 {$title} Test Note
 
 {$begin-section} section-name
 {$head} This is a Section of Text
 Just some test text. This should be {$style bold} bold {$reset}
-This should be {$style italic} italic {$reset}
-{$color yellow} and this should {$color blue back} be some color {$reset}
+This should be {$style italic} italic {$reset-all}
+{$color yellow} and this should {$color blue back} be some color {$reset-all}
 {$end-section}
 
 {$begin-section} section2-name
