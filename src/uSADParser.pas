@@ -49,7 +49,7 @@ interface
       sub_head_style: String;
       sub_head_color: String;
 
-      author, date: String;
+      author, date, title: String;
     end;
     TSADParser = class
       private
@@ -86,6 +86,7 @@ interface
         function NextLine: String;
         function NextLineAsBytes: TByteArray;
         function ParseFile: TStringDynArray;
+        function ParseFileAsBytes: TByteArray;
 
         function FinishedRequiredSection: Boolean;
         property Path: String read FFilePath write SetFile;
@@ -165,6 +166,7 @@ implementation
     FParseSection := '.';
     FMetaData.author := 'N/A';
     FMetaData.date := 'N/A';
+    FMetaData.title := 'N/A';
     FMetaData.head_style := #27'[1m'#27'[4m';
     FMetaData.head_color := #27'[39m';;
     FMetaData.sub_head_style := #27'[4m';
@@ -259,7 +261,7 @@ implementation
   function TSADParser.NextLine: String;
   var
     i, skipWords: Integer;
-    isBack, addReset: Boolean;
+    isBack, addTitle, addReset: Boolean;
     lsplit: TStringDynArray;
   begin
     // TODO: Implement Parsing
@@ -270,6 +272,7 @@ implementation
     lsplit := SplitString(FLine, ' ');
     skipWords := 0;
     addReset := False;
+    addTitle := False;
     for i := 0 to Length(lsplit)-1 do
     begin
       if (skipWords > 0) then
@@ -298,6 +301,7 @@ implementation
 
           '{$title}': begin
             addReset := True;
+            addTitle := True;
             result := result + MetaData.head_style;
           end;
 
@@ -363,6 +367,7 @@ implementation
       result := Copy(result, 1, Length(result)-1);
 
     if addReset then result := result + #27'['+IntToStr(tsResetAll)+'m';
+    if addTitle then FMetaData.title := result;
   end;
 
   { Does the same as NextLine() but converts the string to a byte array. }
@@ -384,17 +389,39 @@ implementation
   { Parses the entire file into an array of Ansi-Formatted Strings. }
   function TSADParser.ParseFile: TStringDynArray;
   var
-    out: TStringDynArray;
+    _out: TStringDynArray;
   begin
-    SetLength(out, 0);
+    SetLength(_out, 0);
 
     while not IsEof() and not FinishedRequiredSection() do
     begin
-      SetLength(out, Length(out)+1);
-      out[Length(out)-1] := NextLine;
+      SetLength(_out, Length(_out)+1);
+      _out[Length(_out)-1] := NextLine;
     end;
 
-    result := out;
+    result := _out;
+  end;
+
+  { Does the same as ParseFile() but converts the string to a byte array. }
+  function TSADParser.ParseFileAsBytes: TByteArray;
+  var
+    cline, _out: TByteArray;
+    lastindex, i: Integer;
+  begin
+    SetLength(_out, 0);
+
+    while not IsEof() and not FinishedRequiredSection() do
+    begin
+      cline := NextLineAsBytes;
+
+      lastindex := Length(_out);
+      SetLength(_out, Length(_out)+Length(cline));
+      
+      for i := lastindex to Length(_out)-1 do
+        _out[i] := cline[i-lastindex];
+    end;
+
+    result := _out;
   end;
 
   { Check if the Section specified in FParseSection has finished reading }

@@ -41,7 +41,7 @@ var
   path, _line, required_section, cparam: String;
   print_meta, print_lines, as_html: Boolean;
   parser: TSADParser;
-  //converter: TSADConverter;
+  converter: TSADConverter;
   content: TStringDynArray;
 begin
   if (ParamCount() = 0) then
@@ -102,5 +102,8 @@ begin
       writeln(_line);
     end;
   end else
-    writeln('Unimplemented as of 1.0.0');
+  begin
+    converter := TSADConverter.Create(parser);
+    writeln(converter.ConvertTo(fHTML));
+  end;
 end.
