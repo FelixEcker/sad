@@ -38,8 +38,11 @@ interface
   uses StrUtils, SysUtils, Types;
 
   type
+    { Exceptions }
     EMalformedDocumentException = Class(Exception);
     ENoSuchSectionException = Class(Exception);
+
+    TByteArray = array of Byte;
     TSADMeta = record
       head_style: String;
       head_color: String;
@@ -81,6 +84,7 @@ interface
         procedure Open;
         procedure CloseFile;
         function NextLine: String;
+        function NextLineAsBytes: TByteArray;
         function ParseFile: TStringDynArray;
 
         function FinishedRequiredSection: Boolean;
@@ -359,6 +363,22 @@ implementation
       result := Copy(result, 1, Length(result)-1);
 
     if addReset then result := result + #27'['+IntToStr(tsResetAll)+'m';
+  end;
+
+  { Does the same as NextLine() but converts the string to a byte array. }
+  function TSADParser.NextLineAsBytes: TByteArray;
+  var
+    i: Integer;
+    _out: TByteArray;
+    _line: String;
+  begin
+    _line := NextLine;
+    SetLength(_out, Length(_line));
+
+    for i := 0 to Length(_line)-1 do
+      _out[i] := Byte(_line[i+1]);
+
+    exit(_out);
   end;
 
   { Parses the entire file into an array of Ansi-Formatted Strings. }
