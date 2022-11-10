@@ -46,7 +46,7 @@ interface
     public
       procedure Open; override;
       function NextLine: String; override;
-      function WriteHtml(const APath, ACSS: String): String;
+      function WriteHtml(const APath, ACSS: String; const AWriteProgress: Boolean = False): String;
     end;
 implementation
   procedure TSADHTMLParser.Open;
@@ -202,13 +202,18 @@ implementation
     if addTitle then begin FMetaData.title := result; result := '<h1>'+result+'</h1>' end;
   end;
 
-  function TSADHTMLParser.WriteHtml(const APath, ACSS: String): String;
+  function TSADHTMLParser.WriteHtml(const APath, ACSS: String; const AWriteProgress: Boolean = False): String;
   var
     _file, cssfile: TextFile;
     tmp: String;
+    i: Integer;
   begin
+    if AWriteProgress then writeln('[] ReWrite of File...');
     Assign(_file, APath);
     ReWrite(_file);
+
+    i := 1;
+    if AWriteProgress then writeln('[', IntToStr(i), '] Writing header...');
     WriteLn(_file, Format('<html><head><title>%s</title></head><body><style>',
     [FMetaData.Title]));
 
@@ -216,16 +221,26 @@ implementation
     ReSet(cssfile);
     while not eof(cssfile) do
     begin
+      i := i + 1;
       ReadLn(cssfile, tmp);
       WriteLn(_file, tmp);
+      if AWriteProgress then writeln('[', IntToStr(i),'] Writing CSS...'+Char($0d));
     end;
     Close(cssfile);
-    WriteLn(_file, '</style>');
+    WriteLn(_file, '</style><center>');
+    i := i + 1;
+    if AWriteProgress then writeln('[', IntToStr(i), '] Beginning writing body...');
 
     while not IsEof() and not FinishedRequiredSection do
+    begin
+      i := i + 1;
       WriteLn(_file, NextLine()+'<br>');
+      if AWriteProgress then writeln('[', IntToStr(i), '] Writing Body...'+Char($0d));
+    end;
 
-    WriteLn(_file, '</body></html>');
+    i := i + 1;
+    if AWriteProgress then writeln('[', IntToStr(i), '] Finishing write...');
+    WriteLn(_file, '</center></body></html>');
     Close(_file);
   end;
 end.

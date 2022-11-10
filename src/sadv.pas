@@ -34,12 +34,12 @@ program sadv;
 (* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *)
 
 
-uses SysUtils, Types, uSADParser, uSADHTMLParser;
+uses SysUtils, Types, uSADParser, uSADHTMLParser, dos;
 
 var
   i, lastparam: Integer;
-  path, _line, required_section, cparam: String;
-  print_meta, print_lines, as_html: Boolean;
+  path, stylepath, _line, required_section, cparam: String;
+  print_meta, print_lines, as_html, verbose_writing: Boolean;
   parser: TSADParser;
   outfile: TextFile;
   content: TStringDynArray;
@@ -50,9 +50,11 @@ begin
     writeln('Usage: sadv [file] <parameters> <:section>');
     writeln;
     writeln('Parameters: ');
-    writeln('-pm, --meta   Print Meta-Information');
-    writeln('-l,  --lines  Print Line-Numbers');
-    writeln('-x,  --html   Output as HTML');
+    writeln('-pm, --meta          Print Meta-Information');
+    writeln('-l,  --lines         Print Line-Numbers');
+    writeln('-x,  --html          Output as HTML');
+    writeln('  ,  --style <path>  Set the HTML Style Sheet');
+    writeln('-vw                  Verbose Writing');
     writeln;
     halt;
   end;
@@ -62,6 +64,7 @@ begin
   print_meta := False;
   print_lines := False;
   as_html := False;
+  verbose_writing := False;
   for i := 2 to ParamCount() do
   begin
     cparam := ParamStr(i);
@@ -76,7 +79,11 @@ begin
     else if (cparam = '-l') or (cparam = '--lines') then
       print_lines := True
     else if (cparam = '-x') or (cparam = '--html') then
-      as_html := True;
+      as_html := True
+    else if (cparam = '--style') then
+      stylepath := ParamStr(i)
+    else if (cparam = '-vw') then
+      verbose_writing := True;
   end;
 
   if not as_html then
@@ -108,6 +115,19 @@ begin
     parser.Section := required_section;
     parser.Open;
 
-    TSADHTMLParser(parser).WriteHtml(path+'.html', 'default.css');
+    if (stylepath = '') then
+    begin
+      writeln('No stylesheet set, using default');
+      stylepath := GetEnv('HOME')+'/.config/sadv/default.css';
+    end;
+
+    if not FileExists(stylepath) then
+    begin
+      writeln('Stylesheet not found: ', stylepath);
+      halt;
+    end;
+
+    // Verbose writing was originally debug but i decided to keep it
+    TSADHTMLParser(parser).WriteHtml(path+'.html', stylepath, verbose_writing);
   end;
 end.
