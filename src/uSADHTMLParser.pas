@@ -223,8 +223,9 @@ implementation
     WriteLn(_file, '</style>');
 
     while not IsEof() and not FinishedRequiredSection do
-      WriteLn(_file, NextLine());
+      WriteLn(_file, NextLine()+'<br>');
 
+    WriteLn(_file, '</body></html>');
     Close(_file);
   end;
 end.
