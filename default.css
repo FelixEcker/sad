@@ -1,0 +1,44 @@
+* {
+  text-align: center;
+}
+
+.coldefault {
+  color: #ffffff;
+}
+
+.colblack {
+  color: #ffffff;
+}
+
+.colred {
+  color: red;
+}
+
+.colgreen {
+  color: green;
+}
+
+.colblue {
+  color: blue;
+}
+/*
+default':      begin if AIsBack then result := bcDefault      else result := fcDefault;      end;
+      'black':        begin if AIsBack then result := bcBlack        else result := fcBlack;        end;
+      'red':          begin if AIsBack then result := bcRed          else result := fcRed;          end;
+      'green':        begin if AIsBack then result := bcGreen        else result := fcGreen;        end;
+      'brown':        begin if AIsBack then result := bcBrown        else result := fcBrown;        end;
+      'blue':         begin if AIsBack then result := bcBlue         else result := fcBlue;         end;
+      'magenta':      begin if AIsBack then result := bcMagenta      else result := fcMagenta;      end;
+      'cyan':         begin if AIsBack then result := bcCyan         else result := fcCyan;         end;
+      'lightgray':    begin if AIsBack then result := bcLightGray    else result := fcLightGray;    end;
+      'richcolors':   begin if AIsBack then result := bcRichColors   else result := fcRichColors;   end;
+      'reset':        result := tsResetAll;
+      'darkgray':     begin if AIsBack then result := bcDarkGray     else result := fcDarkGray;     end;
+      'lightred':     begin if AIsBack then result := bcLightRed     else result := fcLightRed;     end;
+      'lighgreen':    begin if AIsBack then result := bcLightGreen   else result := fcLightGreen;   end;
+      'yellow':       begin if AIsBack then result := bcYellow       else result := fcYellow;       end;
+      'lightblue':    begin if AIsBack then result := bcLightBlue    else result := fcLightBlue;    end;
+      'lightmagenta': begin if AIsBack then result := bcLightMagenta else result := fcLightMagenta; end;
+      'lightcyan':    begin if AIsBack then result := bcLightCyan    else result := fcLightCyan;    end;
+      'white':        begin if AIsBack then result := bcWhite        else result := fcWhite;        end;
+ */

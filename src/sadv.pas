@@ -34,14 +34,14 @@ program sadv;
 (* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *)
 
 
-uses SysUtils, Types, uSADParser, uSADConverter;
+uses SysUtils, Types, uSADParser, uSADHTMLParser;
 
 var
   i, lastparam: Integer;
   path, _line, required_section, cparam: String;
   print_meta, print_lines, as_html: Boolean;
   parser: TSADParser;
-  converter: TSADConverter;
+  outfile: TextFile;
   content: TStringDynArray;
 begin
   if (ParamCount() = 0) then
@@ -79,20 +79,20 @@ begin
       as_html := True;
   end;
 
-  parser := TSADParser.Create;
-  parser.Path := path;
-  parser.Section := required_section;
-  parser.Open;
-
-  if print_meta then
-  begin
-    writeln('Author: ', parser.MetaData.author);
-    writeln('Date: ', parser.MetaData.date);
-    writeln;
-  end;
-
   if not as_html then
   begin
+    parser := TSADParser.Create;
+    parser.Path := path;
+    parser.Section := required_section;
+    parser.Open;
+
+    if print_meta then
+    begin
+      writeln('Author: ', parser.MetaData.author);
+      writeln('Date: ', parser.MetaData.date);
+      writeln;
+    end;
+    
     i := 0;
     content := parser.ParseFile;
     for _line in content do
@@ -103,7 +103,11 @@ begin
     end;
   end else
   begin
-    converter := TSADConverter.Create(parser);
-    writeln(converter.ConvertTo(fHTML));
+    parser := TSADHTMLParser.Create;
+    parser.Path := path;
+    parser.Section := required_section;
+    parser.Open;
+
+    TSADHTMLParser(parser).WriteHtml(path+'.html', 'default.css');
   end;
 end.

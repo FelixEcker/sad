@@ -52,7 +52,7 @@ interface
       author, date, title: String;
     end;
     TSADParser = class
-      private
+      protected
         FFile: TextFile;
         FOpen: Boolean;
         FFilePath: String;
@@ -80,15 +80,15 @@ interface
         constructor Create;
         destructor Free;
 
-        procedure SetFile(const Value: String);
-        procedure Open;
-        procedure CloseFile;
-        function NextLine: String;
-        function NextLineAsBytes: TByteArray;
-        function ParseFile: TStringDynArray;
-        function ParseFileAsBytes: TByteArray;
+        procedure SetFile(const Value: String); virtual;
+        procedure Open; virtual;
+        procedure CloseFile; virtual;
+        function NextLine: String; virtual;
+        function NextLineAsBytes: TByteArray; virtual;
+        function ParseFile: TStringDynArray; virtual;
+        function ParseFileAsBytes: TByteArray; virtual;
 
-        function FinishedRequiredSection: Boolean;
+        function FinishedRequiredSection: Boolean; virtual;
         property Path: String read FFilePath write SetFile;
         property Opened: Boolean read FOpen;
         property Section: String read FParseSection write FParseSection;
