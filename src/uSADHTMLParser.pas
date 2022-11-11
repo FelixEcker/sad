@@ -59,9 +59,9 @@ implementation
 
   function TSADHTMLParser.NextLine: String;
   var
-    i, j, skipWords: Integer;
+    i, j, k, skipWords: Integer;
     isBack, addTitle, addReset: Boolean;
-    openTag: String;
+    openTag, tmp: String;
     lsplit: TStringDynArray;
   begin
     // TODO: Implement Parsing
@@ -134,7 +134,7 @@ implementation
   
             if FNColors > 0 then
             begin
-              result := result + '</div>';
+              result := result + '</span>';
               FNColors := FNColors-1;
             end;
             result := result + '<span class="col'+FLastColor+'">';
@@ -143,34 +143,47 @@ implementation
 
           // Reset with preserves
           '{$reset}': begin
-            result := Copy(result, 1, Length(result)-1) + '</div>';
+            tmp := '';
             
             // This could be optimised a lot
-            for j := 0 to FNColors+FNStyles-2 do
+            for j := 0 to FNColors-1 do
             begin
-              case FPreserveMode of
-                1: begin
-                  if FLastStyle <> '' then 
-                  begin
-                    result := result + '<span class="stl'+FLastStyle+'">';
-                    FNStyles := FNStyles - 1;
-                  end;
-                end;
-                2: begin
-                  if FLastColor <> '' then 
-                  begin
-                    result := result + '<span class="col'+FLastColor+'">';
-                    FNColors := FNColors - 1;
-                  end;
+              if (FPreserveMode <> 1) then
+              begin
+                if FLastStyle <> '' then 
+                begin
+                  tmp := tmp + '</span>';
+                  FNStyles := FNStyles - 1;
                 end;
               end;
             end;
+
+            for j := 0 to FNColors-1 do
+            begin
+              if (FPreserveMode <> 2) then
+              begin
+                if FLastColor <> '' then 
+                begin
+                  tmp := tmp + '</span>';
+                  FNColors := FNColors - 1;
+                end;
+              end;
+            end;
+
+            result := result + tmp;
           end;
 
           '{$reset-all}': begin
-            for j := 0 to FNColors+FNStyles-2 do
-              result := Copy(result, 1, Length(result)-1) + '</span>';
+            tmp := '';
+            writeln(FNColors);
+            writeln(FNStyles);
+            for j := 0 to FNColors-1 do
+              tmp := tmp + '</span>';
 
+            for j := 0 to FNStyles-1 do
+              tmp := tmp + '</span>';
+
+            result := result + tmp;
             FNColors := 0;
             FNStyles := 0;
           end;
