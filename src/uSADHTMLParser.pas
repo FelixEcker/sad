@@ -175,8 +175,7 @@ implementation
 
           '{$reset-all}': begin
             tmp := '';
-            writeln(FNColors);
-            writeln(FNStyles);
+
             for j := 0 to FNColors-1 do
               tmp := tmp + '</span>';
 
