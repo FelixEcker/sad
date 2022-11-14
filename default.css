@@ -1,5 +1,15 @@
-h1, h2, h3 {
+div {
+  width: 50%;
+  margin: auto;
+  padding: 10px;
+}
+
+h1 {
   text-align: center;
+}
+
+* {
+  text-align: left;
 }
 
 .coldefault {

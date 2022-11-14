@@ -8,3 +8,5 @@ mkdir "C:\Program Files\sadv"
 
 echo \> Copying sadv.exe to Install Directory
 mv out\sadv.exe "C:\Program Files\sadv\sadv.exe"
+
+pause
