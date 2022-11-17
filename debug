@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+./clean
+fpc -g src/sadv.pas -FE"out/"
+gdb --args out/sadv.exe notes.sad -pm

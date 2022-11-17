@@ -295,7 +295,7 @@ implementation
           end;
           '{$end-section}': begin 
             FCurrentSection := FPreviousSections[Length(FPreviousSections)-1];
-            FPreviousSections := Copy(FPreviousSections, 1, Length(FPreviousSections)-1);
+            FPreviousSections := Copy(FPreviousSections, 0, Length(FPreviousSections)-1);
             exit(NextLine()+sLineBreak); 
           end;
 

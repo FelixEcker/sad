@@ -95,7 +95,7 @@ implementation
           end;
           '{$end-section}': begin 
             FCurrentSection := FPreviousSections[Length(FPreviousSections)-1];
-            FPreviousSections := Copy(FPreviousSections, 1, Length(FPreviousSections)-1);
+            FPreviousSections := Copy(FPreviousSections, 0, Length(FPreviousSections)-1);
             exit('</div>'+sLineBreak); 
           end;
 
@@ -246,7 +246,8 @@ implementation
     while not IsEof() and not FinishedRequiredSection do
     begin
       i := i + 1;
-      WriteLn(_file, NextLine()+'<br>');
+      tmp := NextLine();
+      WriteLn(_file, tmp+'<br>');
       if AWriteProgress then writeln('[', IntToStr(i), '] Writing Body...'+Char($0d));
     end;
 
