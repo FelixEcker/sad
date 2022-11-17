@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 
 ./build
-./sadv notes.sad -pm :.
+./sadv test.sad -pm :.

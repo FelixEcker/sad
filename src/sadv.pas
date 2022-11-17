@@ -60,6 +60,13 @@ begin
   end;
 
   path := ParamStr(1);
+  
+  if not FileExists(path) then
+  begin
+    writeln('Input File not found: ', path);
+    halt;
+  end;
+
   required_section := '.';
   print_meta := False;
   print_lines := False;
@@ -86,48 +93,59 @@ begin
       verbose_writing := True;
   end;
 
-  if not as_html then
-  begin
-    parser := TSADParser.Create;
-    parser.Path := path;
-    parser.Section := required_section;
-    parser.Open;
-
-    if print_meta then
+  try
+    if not as_html then
     begin
-      writeln('Author: ', parser.MetaData.author);
-      writeln('Date: ', parser.MetaData.date);
-      writeln;
-    end;
+      parser := TSADParser.Create;
+      parser.Path := path;
+      parser.Section := required_section;
+      parser.Open;
+
+      if print_meta then
+      begin
+        writeln('Author: ', parser.MetaData.author);
+        writeln('Date: ', parser.MetaData.date);
+        writeln;
+      end;
     
-    i := 0;
-    content := parser.ParseFile;
-    for _line in content do
+      i := 0;
+      content := parser.ParseFile;
+      for _line in content do
+      begin
+        i := i + 1;
+        if print_lines then write(Format('%.3d  ', [i]));
+        writeln(_line);
+      end;
+    end else
     begin
-      i := i + 1;
-      if print_lines then write(Format('%.3d  ', [i]));
-      writeln(_line);
-    end;
-  end else
-  begin
-    parser := TSADHTMLParser.Create;
-    parser.Path := path;
-    parser.Section := required_section;
-    parser.Open;
+      parser := TSADHTMLParser.Create;
+      parser.Path := path;
+      parser.Section := required_section;
+      parser.Open;
 
-    if (stylepath = '') then
+      if (stylepath = '') then
+      begin
+        writeln('No stylesheet set, using default');
+        stylepath := GetEnv('HOME')+'/.config/sadv/default.css';
+      end;
+
+      if not FileExists(stylepath) then
+      begin
+        writeln('Stylesheet not found: ', stylepath);
+        halt;
+      end;
+
+      // Verbose writing was originally debug but i decided to keep it
+      TSADHTMLParser(parser).WriteHtml(path+'.html', stylepath, verbose_writing);
+    end;
+  except
+    on e: EMalformedDocumentException do
     begin
-      writeln('No stylesheet set, using default');
-      stylepath := GetEnv('HOME')+'/.config/sadv/default.css';
+      writeln('Input File is Malformed: ', e.Message);
     end;
-
-    if not FileExists(stylepath) then
+    on e: ENoSuchSectionException do
     begin
-      writeln('Stylesheet not found: ', stylepath);
-      halt;
+      writeln(e.Message);
     end;
-
-    // Verbose writing was originally debug but i decided to keep it
-    TSADHTMLParser(parser).WriteHtml(path+'.html', stylepath, verbose_writing);
   end;
 end.
