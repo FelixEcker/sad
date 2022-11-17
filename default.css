@@ -100,3 +100,14 @@ h3 {
 .strloverline {
   text-decoration: overline;
 }
+
+.stlfraktur {
+  font-family: "Courier New", monospace;
+  font-size: 90%;
+  display: inline-block;
+  width: 100%;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  background-color: #ECECEC;
+  border-radius: 4px;
+}
