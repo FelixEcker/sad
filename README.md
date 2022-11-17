@@ -8,7 +8,10 @@ program like this. Formatting is handled through `mode-switches` in plain text.
 This Repository has Pascal-Units for parsing a sad file, you may use these Units in your projects
 as long as you follow the license specified in the LICENSE file and in the source.
 
-## Usage for sadv
+## sadv
+sadv(iewer) uses these Units for displaying a sad in console or converting it to HTML.
+
+### Usage
 `sadv <file> [parameters] [:section]` <br>
 
 By default, the File will be Formatted using ANSI-escapes and output to STDOUT. <br>
@@ -21,6 +24,14 @@ By default, the File will be Formatted using ANSI-escapes and output to STDOUT. 
 | -x           |            | Convert to HTML                     |
 | --style      | path       | Specify a CSS for the HTML export   |
 | -vw          |            | Enable Verbose mode for HTML export |
+
+### Installation
+**From Source**
+```bash
+git clone https://github.com/FelixEcker/sad.git
+cd sad
+sh install.sh
+```
 
 ## Features and Limitations
 **Features** <br>
