@@ -1,9 +1,26 @@
 # SAD
-*(S)imple (A)nsi (D)ocument *
+*(S)imple (A)nsi (D)ocument*
 
 ## About
 SAD is a document-format, designed to be displayed in ANSI compatible terminals through a viewer
 program like this. Formatting is handled through `mode-switches` in plain text.
+
+This Repository has Pascal-Units for parsing a sad file, you may use these Units in your projects
+as long as you follow the license specified in the LICENSE file and in the source.
+
+## Usage for sadv
+`sadv <file> [parameters] [:section]` <br>
+
+By default, the File will be Formatted using ANSI-escapes and output to STDOUT. <br>
+
+**Arguments** <br>
+
+| Name         | Parameters | Description                         |
+| ------------ | ---------- | ----------------------------------- |
+| -pm / --meta |            | Prints the documents Meta-Data      |
+| -x           |            | Convert to HTML                     |
+| --style      | path       | Specify a CSS for the HTML export   |
+| -vw          |            | Enable Verbose mode for HTML export |
 
 ## Features and Limitations
 **Features** <br>
@@ -69,3 +86,4 @@ and im not in the subsection anymore
 	* Resets all formatting to default (regards preserve-mode)
 * reset-all
     * Resets all formatting to default (disregards preverse-mode)
+
