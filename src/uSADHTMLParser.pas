@@ -40,9 +40,7 @@ interface
   type
     TSADHTMLParser = class(TSADParser)
     private
-      FStyleOpen, FColorOpen: Boolean;
       FNStyles, FNColors: Integer;
-      FPageTitle: String;
     public
       procedure Open; override;
       function NextLine: String; override;
