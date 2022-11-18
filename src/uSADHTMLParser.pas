@@ -60,7 +60,7 @@ implementation
   function TSADHTMLParser.NextLine: String;
   var
     i, j, k, skipWords: Integer;
-    isBack, addTitle, addReset: Boolean;
+    lb, isBack, addTitle, addReset: Boolean;
     openTag, tmp: String;
     lsplit: TStringDynArray;
   begin
@@ -73,6 +73,7 @@ implementation
     skipWords := 0;
     addReset := False;
     addTitle := False;
+    lb := True;
     for i := 0 to Length(lsplit)-1 do
     begin
       if (skipWords > 0) then
@@ -101,18 +102,21 @@ implementation
 
           '{$title}': begin
             addTitle := True;
+            lb := False;
           end;
 
           '{$head}': begin
             addReset := True;
             result := result + '<h2>';
             openTag := 'h2';
+            lb := False;
           end;
 
           '{$sub-head}': begin
             addReset := True;
             result := result + '<h3>';
             openTag := 'h3';
+            lb := False;
           end;
 
           { Styling }
@@ -211,23 +215,50 @@ implementation
       result := Copy(result, 1, Length(result)-1);
     }
     if addReset then result := result + Format('</%s>', [openTag]);
-    if addTitle then begin FMetaData.title := result; result := '<h1>'+result+'</h1>' end;
+    if addTitle then 
+    begin 
+      FMetaData.title := result; 
+      writeln(FMetaData.title);
+      result := '<h1>'+result+'</h1>';
+      result := result + Format('<h4>%s, %s</h4>', [FMetaData.Author, FMetaData.Date]);
+    end;
+
+    if lb then result := result + '<br>';
   end;
 
   function TSADHTMLParser.WriteHtml(const APath, ACSS: String; const AWriteProgress: Boolean = False): String;
   var
     _file, cssfile: TextFile;
-    tmp: String;
+    tmp, head: String;
+    body: TStringDynArray;
     i: Integer;
   begin
+    {$H+}
+    if AWriteProgress then writeln('[', IntToStr(i), '] Beginning parsing body...');
+
+    SetLength(body, 0);
+    while not IsEof() and not FinishedRequiredSection do
+    begin
+      i := i + 1;
+      SetLength(body, Length(body)+1);
+      body[Length(body)-1] := NextLine() + sLineBreak;
+      if AWriteProgress then writeln('[', IntToStr(i), '] Parsing...');
+    end;
+
+    i := 1;
+    if AWriteProgress then writeln('[', IntToStr(i), '] Creating header...');
+    head := head + Format('<html><head><title>%s</title></head><body><style>',
+    [FMetaData.Title]);    
+    i := i + 1;
+    
+    if AWriteProgress then writeln('[] Writing HTML to file...');
+    
     if AWriteProgress then writeln('[] ReWrite of File...');
     Assign(_file, APath);
     ReWrite(_file);
 
-    i := 1;
     if AWriteProgress then writeln('[', IntToStr(i), '] Writing header...');
-    WriteLn(_file, Format('<html><head><title>%s</title></head><body><style>',
-    [FMetaData.Title]));
+    WriteLn(_file, head);
 
     Assign(cssfile, ACSS);
     ReSet(cssfile);
@@ -239,21 +270,20 @@ implementation
       if AWriteProgress then writeln('[', IntToStr(i),'] Writing CSS...'+Char($0d));
     end;
     Close(cssfile);
+    
     WriteLn(_file, '</style><center>');
     i := i + 1;
-    if AWriteProgress then writeln('[', IntToStr(i), '] Beginning writing body...');
 
-    while not IsEof() and not FinishedRequiredSection do
+    for tmp in body do
     begin
+      if AWriteProgress then writeln('[', IntToStr(i), '] Writing body to file...');
+      WriteLn(_file, tmp);
       i := i + 1;
-      tmp := NextLine();
-      WriteLn(_file, tmp+'<br>');
-      if AWriteProgress then writeln('[', IntToStr(i), '] Writing Body...'+Char($0d));
     end;
 
-    i := i + 1;
     if AWriteProgress then writeln('[', IntToStr(i), '] Finishing write...');
     WriteLn(_file, '</center></body></html>');
     Close(_file);
+    {$H-}
   end;
 end.

@@ -38,6 +38,12 @@ h3 {
   margin: 1.75em 0 0.8em;
 }
 
+h4 {
+  text-align: center;
+  font-style: italic;
+  font-weight: normal;
+}
+
 .coldefault {
   color: black;
 }
