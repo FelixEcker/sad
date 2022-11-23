@@ -208,15 +208,11 @@ implementation
     end;
 
     // Remove trailing spaces
-    {
-    while (result[Length(result)] = ' ') do
-      result := Copy(result, 1, Length(result)-1);
-    }
     if addReset then result := result + Format('</%s>', [openTag]);
     if addTitle then 
     begin 
       FMetaData.title := result; 
-      writeln(FMetaData.title);
+
       result := '<h1>'+result+'</h1>';
       result := result + Format('<h4>%s, %s</h4>', [FMetaData.Author, FMetaData.Date]);
     end;
