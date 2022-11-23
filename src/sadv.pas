@@ -34,7 +34,7 @@ program sadv;
 (* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *)
 
 
-uses SysUtils, Types, uSADParser, uSADHTMLParser, dos;
+uses SysUtils, Types, uPathResolve, uSADParser, uSADHTMLParser, dos;
 
 var
   i, lastparam: Integer;
@@ -46,6 +46,7 @@ var
 begin
   if (ParamCount() = 0) then
   begin
+    writeln(ResolveEnvsInPath('$HOME/test'));
     writeln('SAD Command Line Viewer ; 1.2.0 by Felix Eckert');
     writeln('Usage: sadv [file] <parameters> <:section>');
     writeln;
@@ -126,7 +127,7 @@ begin
       if (stylepath = '') then
       begin
         writeln('No stylesheet set, using default');
-        stylepath := GetEnv('HOME')+'/.config/sadv/default.css';
+        stylepath := ResolveEnvsInPath('$HOME/.config/sad/default.css');
       end;
 
       if not FileExists(stylepath) then
