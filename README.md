@@ -26,6 +26,9 @@ By default, the File will be Formatted using ANSI-escapes and output to STDOUT. 
 | -vw          |            | Enable Verbose mode for HTML export |
 
 ### Installation
+**AUR** <br>
+You can find sadv on the AUR [here](https://aur.archlinux.org/packages/sadv). <br>
+
 **From Source**
 ```bash
 git clone https://github.com/FelixEcker/sad.git
