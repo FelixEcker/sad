@@ -46,7 +46,6 @@ var
 begin
   if (ParamCount() = 0) then
   begin
-    writeln(ResolveEnvsInPath('$HOME/test'));
     writeln('SAD Command Line Viewer ; 1.2.0 by Felix Eckert');
     writeln('Usage: sadv [file] <parameters> <:section>');
     writeln;
