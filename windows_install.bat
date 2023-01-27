@@ -1,5 +1,6 @@
 @echo off
 
+mkdir out
 fpc src\sadv.pas -O4 -FE"out/"
 
 mkdir "C:\Program Files\sadv"
