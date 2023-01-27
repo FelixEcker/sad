@@ -2,6 +2,7 @@
 # is now available on the AUR
 
 echo \> building...
+mkdir out
 sh build
 
 echo
