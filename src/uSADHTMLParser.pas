@@ -196,8 +196,8 @@ implementation
 
             skipWords := 1;
 
-            FLastStyle := Copy(lsplit[i+1], 1, Length(lsplit[i+1])-1);
-            result := result + '<span class="stl'+FLastStyle+'">';
+            FLastStyle := 'stl'+StringReplace(Copy(lsplit[i+1], 1, Length(lsplit[i+1])-1), ';', ' stl', [rfReplaceAll]);
+            result := result + '<span class="'+FLastStyle+'">';
             FNStyles := FNStyles + 1;
           end;
         end;

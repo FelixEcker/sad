@@ -1,3 +1,6 @@
+# This install script is deperacted for Arch, sadv
+# is now available on the AUR
+
 echo \> building...
 sh build
 
