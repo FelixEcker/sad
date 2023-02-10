@@ -93,6 +93,9 @@ implementation
             exit(Format('<div id="%s">', [FCurrentSection])); 
           end;
           '{$end-section}': begin 
+            if (Length(FPreviousSections) = 0) then
+              raise EMalformedDocumentException.Create('Cannot end-section outside of a section!');
+
             FCurrentSection := FPreviousSections[Length(FPreviousSections)-1];
             FPreviousSections := Copy(FPreviousSections, 0, Length(FPreviousSections)-1);
             exit('</div>'+sLineBreak); 
