@@ -295,7 +295,7 @@ implementation
           end;
           '{$end-section}': begin 
             if (Length(FPreviousSections) = 0) then
-              raise EMalformedDocumentException.Create('Cannot end-section outside of a section!');
+              raise EMalformedDocumentException.Create('end-section switch stated outside of a section at line: '+IntToStr(FLineNumber));
 
             FCurrentSection := FPreviousSections[Length(FPreviousSections)-1];
             FPreviousSections := Copy(FPreviousSections, 0, Length(FPreviousSections)-1);
