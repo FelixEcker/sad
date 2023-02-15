@@ -36,6 +36,8 @@ program sadv;
 
 uses SysUtils, Types, uPathResolve, uSADParser, uSADHTMLParser, dos;
 
+const
+  VERSION = '1.2.2';
 var
   i, lastparam: Integer;
   path, stylepath, _line, required_section, cparam: String;
@@ -46,7 +48,7 @@ var
 begin
   if (ParamCount() = 0) then
   begin
-    writeln('SAD Command Line Viewer ; 1.2.1 by Felix Eckert');
+    writeln('SAD Command Line Viewer ; ', VERSION, ' by Felix Eckert');
     writeln('Usage: sadv [file] <parameters> <:section>');
     writeln;
     writeln('Parameters: ');
