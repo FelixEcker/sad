@@ -1,5 +1,0 @@
-#!/usr/bin/bash
-
-./clean
-fpc -O4 -Xs -XX src/sadv.pas -FE"out/"
-mv out/sadv ./sadv

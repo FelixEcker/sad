@@ -2,8 +2,7 @@
 # is now available on the AUR
 
 echo \> building...
-mkdir out
-sh build
+sh build.sh
 
 echo
 echo \> installing to \"/usr/local/bin\" as sadv
