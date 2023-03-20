@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-./build
-./sadv test.sad -pm :.
