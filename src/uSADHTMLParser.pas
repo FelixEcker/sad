@@ -65,6 +65,8 @@ implementation
     // TODO: Implement Parsing
     readln(FFile, FLine);
     FLineNumber := FLineNumber + 1;
+    FLine := StringReplace(FLine, '<', '&lt;', [rfReplaceAll]);
+    FLine := StringReplace(FLine, '>', '&gt;', [rfReplaceAll]);
 
     result := '';
     lsplit := SplitString(FLine, ' ');
