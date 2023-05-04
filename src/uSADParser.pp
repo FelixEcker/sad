@@ -223,7 +223,13 @@ implementation
 
     ParseStructure := True;
   end;
-  
+
+  function ParseSection(const ASection: TSection; 
+                        const ADoChildren: Boolean): String;
+  begin
+  end;
+
+{$IFDEF DEBUG} 
   function MakeIndent(const AAmount: Integer): String;
   var
     i: Integer;
@@ -231,14 +237,8 @@ implementation
     MakeIndent := '';
     for i := 1 to AAmount do
       MakeIndent := MakeIndent + ' ';
-  end;
+  end; 
 
-  function ParseSection(const ASection: TSection; 
-                        const ADoChildren: Boolean): String;
-  begin
-  end;
-
-{$IFDEF DEBUG}
   procedure DebugPrintSection(const ASection: TSection;
                               const AIndent, AIndentIncrease: Integer);
   var
