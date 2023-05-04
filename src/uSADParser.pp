@@ -58,8 +58,10 @@ interface
   function ParseStructure(var ADocument: TSADocument): Boolean;
   function ParseSection(const ASection: TSection; 
                         const ADoChildren: Boolean): String;
-
+{$IFDEF DEBUG}
   procedure DebugPrintDocument(const ADocument: TSADocument);
+{$ENDIF}
+
   const
     { Constants of valid switches }
     DEFINE_META    = '{$meta';
@@ -231,6 +233,12 @@ implementation
       MakeIndent := MakeIndent + ' ';
   end;
 
+  function ParseSection(const ASection: TSection; 
+                        const ADoChildren: Boolean): String;
+  begin
+  end;
+
+{$IFDEF DEBUG}
   procedure DebugPrintSection(const ASection: TSection;
                               const AIndent, AIndentIncrease: Integer);
   var
@@ -278,9 +286,5 @@ implementation
     writeln(MakeIndent(indent), '}');
     writeln('}');
   end;
-
-  function ParseSection(const ASection: TSection; 
-                        const ADoChildren: Boolean): String;
-  begin
-  end;
+{$ENDIF}
 end.

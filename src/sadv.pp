@@ -102,5 +102,7 @@ begin
     writeln('--> ', parse_error);
     halt;
   end;
+{$IFDEF DEBUG}
   DebugPrintDocument(doc);
+{$ENDIF}
 end.
