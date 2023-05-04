@@ -1,10 +1,10 @@
-{$mode fpc}
-program sadv;
+unit uPathResolve;
 
-{         sadv - Simple Ansi Document Viewer          }
-{                                                     }
-{ Author: Felix Eckert                                }
-{ Licensed under the 3-Clause BSD License. See below. }
+{ uPathResolve.pas - Resolver for Environment variables in UNIX Paths }
+{                                                                     }
+{ Author: Felix Eckert                                                }
+{ Created as part of "sadv",                                          }
+{ Licensed under the 3-Clause BSD License. See below.                 }
 
 (* Copyright (c) 2022, Felix Eckert                                               *)
 (*                                                                                *)
@@ -33,74 +33,77 @@ program sadv;
 (* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  *)
 (* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *)
 
+{$H+}
 
-uses SysUtils, Types, uPathResolve, uSADParser, dos;
+interface
+  uses Dos, SysUtils;//, Types;  
 
-const
-  VERSION = '1.2.2';
-var
-  i, lastparam: Integer;
-  path, stylepath, _line, required_section, cparam: String;
-  print_meta, print_lines, as_html, verbose_writing: Boolean;
-  outfile: TextFile;
-  doc: TSADocument;
-begin
-  if (ParamCount() = 0) then
+  { Check if Character is Valid for an Environment Variable Name }
+  function ValidEnvChar(const AChar: Char): Boolean;
+
+  { Resolve Environment Variables in Path }
+  function ResolveEnvsInPath(const APath: String): String;
+
+implementation
+  function ValidEnvChar(const AChar: Char): Boolean;
+  var
+    bval: Byte;
   begin
-    writeln('SAD Command Line Viewer ; ', VERSION, ' by Felix Eckert');
-    writeln('Usage: sadv [file] <parameters> <:section>');
-    writeln;
-    writeln('Parameters: ');
-    writeln('-pm, --meta          Print Meta-Information');
-    writeln('-l,  --lines         Print Line-Numbers');
-    writeln('-x,  --html          Output as HTML');
-    writeln('  ,  --style <path>  Set the HTML Style Sheet');
-    writeln('-vw                  Verbose Writing');
-    writeln;
-    halt;
+    bval := Byte(AChar);
+    if (bval > 47) and (bval < 58) then
+      exit(True)
+    else if (bval > 64) and (bval < 91) then
+      exit(True)
+    else
+      exit(AChar = '_');
   end;
 
-  path := ParamStr(1);
-  
-  if not FileExists(path) then
+  function ResolveEnvsInPath(const APath: String): String;
+  var
+    i: Integer;
+    c, varname, result: String;
+    escaping, buildingVarName: Boolean;
   begin
-    writeln('Input File not found: ', path);
-    halt;
-  end;
+    result := '';
+    escaping := False;
 
-  required_section := '.';
-  print_meta := False;
-  print_lines := False;
-  as_html := False;
-  verbose_writing := False;
-  for i := 2 to ParamCount() do
-  begin
-    cparam := ParamStr(i);
-    if cparam[1] = ':' then
+    for i := 1 to Length(APath) do
     begin
-      required_section := Copy(cparam, 2, Length(cparam));
-      break;
+      c := APath[i];
+
+      if (c = '$') then
+      begin
+        if escaping then
+          result := result + c
+        else begin
+          varname := '';
+          buildingVarName := True;
+          continue;
+        end;
+      end else if (c = '\') and not escaping then
+      begin
+        buildingVarName := False;
+        result := result + GetEnv(varname);
+
+        escaping := True;
+        continue;
+      end;
+
+      if buildingVarName then
+      begin
+        if (ValidEnvChar(c[1])) then
+          varname := varname + c
+        else
+        begin
+          buildingVarName := False;
+          result := result + GetEnv(varname) + c;
+        end;
+      end else
+        result := result + c;
+
+      escaping := False;
     end;
 
-    if (cparam = '-pm') or (cparam = '--meta') then
-      print_meta := True
-    else if (cparam = '-l') or (cparam = '--lines') then
-      print_lines := True
-    else if (cparam = '-x') or (cparam = '--html') then
-      as_html := True
-    else if (cparam = '--style') then
-      stylepath := ParamStr(i)
-    else if (cparam = '-vw') then
-      verbose_writing := True;
+    ResolveEnvsInPath := result;
   end;
-
-  Assign(doc.doc_file, path);
-  ReSet(doc.doc_file);
-  if not ParseStructure(doc) then
-  begin
-    writeln('ParseStructure failed on line ', doc.line_number);
-    writeln('--> ', parse_error);
-    halt;
-  end;
-  DebugPrintDocument(doc);
 end.

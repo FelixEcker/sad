@@ -1,4 +1,4 @@
-{$mode fpc}
+{$mode objfpc}
 program sadv;
 
 {         sadv - Simple Ansi Document Viewer          }
@@ -34,7 +34,7 @@ program sadv;
 (* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *)
 
 
-uses SysUtils, Types, uPathResolve, uSADParser, dos;
+uses SysUtils, Types, uPathResolve, uSADParser, uSADHTMLParser, dos;
 
 const
   VERSION = '1.2.2';
@@ -42,8 +42,9 @@ var
   i, lastparam: Integer;
   path, stylepath, _line, required_section, cparam: String;
   print_meta, print_lines, as_html, verbose_writing: Boolean;
+  parser: TSADParser;
   outfile: TextFile;
-  doc: TSADocument;
+  content: TStringDynArray;
 begin
   if (ParamCount() = 0) then
   begin
@@ -94,13 +95,59 @@ begin
       verbose_writing := True;
   end;
 
-  Assign(doc.doc_file, path);
-  ReSet(doc.doc_file);
-  if not ParseStructure(doc) then
-  begin
-    writeln('ParseStructure failed on line ', doc.line_number);
-    writeln('--> ', parse_error);
-    halt;
+  try
+    if not as_html then
+    begin
+      parser := TSADParser.Create;
+      parser.Path := path;
+      parser.Section := required_section;
+      parser.Open;
+
+      if print_meta then
+      begin
+        writeln('Author: ', parser.MetaData.author);
+        writeln('Date: ', parser.MetaData.date);
+        writeln;
+      end;
+    
+      i := 0;
+      content := parser.ParseFile;
+      for _line in content do
+      begin
+        i := i + 1;
+        if print_lines then write(Format('%.3d  ', [i]));
+        writeln(_line);
+      end;
+    end else
+    begin
+      parser := TSADHTMLParser.Create;
+      parser.Path := path;
+      parser.Section := required_section;
+      parser.Open;
+
+      if (stylepath = '') then
+      begin
+        writeln('No stylesheet set, using default');
+        stylepath := ResolveEnvsInPath('$HOME/.config/sad/default.css');
+      end;
+
+      if not FileExists(stylepath) then
+      begin
+        writeln('Stylesheet not found: ', stylepath);
+        halt;
+      end;
+
+      // Verbose writing was originally debug but i decided to keep it
+      TSADHTMLParser(parser).WriteHtml(path+'.html', stylepath, verbose_writing);
+    end;
+  except
+    on e: EMalformedDocumentException do
+    begin
+      writeln('Input File is Malformed: ', e.Message);
+    end;
+    on e: ENoSuchSectionException do
+    begin
+      writeln(e.Message);
+    end;
   end;
-  DebugPrintDocument(doc);
 end.
