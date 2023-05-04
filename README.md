@@ -11,6 +11,13 @@ as long as you follow the license specified in the LICENSE file and in the sourc
 ## sadv
 sadv(iewer) uses these Units for displaying a sad in console or converting it to HTML.
 
+### Rewrite
+A rewrite of the parsing unit and sav is currently being done on the fpc_rewrite branch,
+the goals of this rewrite are:
+1. Cleaner Code, more maintainable code
+2. Better usability as a library
+3. Move away from OOP to Procedural
+
 ### Usage
 `sadv <file> [parameters] [:section]` <br>
 
