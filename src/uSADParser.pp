@@ -226,7 +226,39 @@ implementation
 
   function ParseSection(const ASection: TSection; 
                         const ADoChildren: Boolean): String;
+  var
+    lines, line_split: TStringDynArray;
+    current_line: String;
+    i: Integer;
+    section: TSection;
   begin
+    ParseSection := '';
+
+    lines := SplitString(ASection.contents, sLineBreak);
+
+    for current_line in lines do
+    begin
+      line_split := SplitString(current_line, ' ');
+
+      for i := 0 to Length(line_split) - 1 do
+      begin
+        case line_split[i] of
+        HEADER: continue;
+        SUB_HEADER: continue;
+        STYLE: continue;
+        COLOR: continue;
+        RESET_ALL: continue;
+        else
+          ParseSection := ParseSection + line_split[i] + ' ';
+        end;
+      end;
+      ParseSection := ParseSection + sLineBreak;
+    end;
+
+    if not ADoChildren then exit;
+
+    for section in ASection.children do
+      ParseSection := ParseSection + ParseSection(section, True);
   end;
 
 {$IFDEF DEBUG} 
