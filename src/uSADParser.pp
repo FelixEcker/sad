@@ -62,7 +62,7 @@ interface
   procedure DebugPrintDocument(const ADocument: TSADocument);
 {$ENDIF}
 
-  {$INCLUDE inc/ansicodes.inc }
+  {$INCLUDE inc/ansicodes.inc}
 
   const
     { Constants of valid switches }
@@ -99,14 +99,16 @@ implementation
     ASection.children[HIGH(ASection.children)] := AChild;
   end;
 
-  function MergeStringArray(const AArray: TStringDynArray;
+  function MergeStringArray(AArray: TStringDynArray;
                             const AJoinStr: String): String;
   var
     str: String;
   begin
-    MergeStringArray := '';
-
     if Length(AArray) < 1 then exit;
+
+    MergeStringArray := AArray[0];
+    AArray := Copy(AArray, 1, Length(AArray)-1);
+
     for str in AArray do
       MergeStringArray := MergeStringArray + AJoinStr + str;
   end;
@@ -234,8 +236,8 @@ implementation
                         const ADoChildren: Boolean): String;
   var
     lines, line_split: TStringDynArray;
-    current_line: String;
-    i: Integer;
+    current_line, write_line: String;
+    i, skip: Integer;
     section: TSection;
   begin
     ParseSection := '';
@@ -246,18 +248,38 @@ implementation
     begin
       line_split := SplitString(current_line, ' ');
 
+      skip := 0;
       for i := 0 to Length(line_split) - 1 do
       begin
+        if skip > 0 then
+        begin
+          dec(skip);
+          continue;
+        end;
+
         case line_split[i] of
-        HEADER: continue;
+        HEADER: begin
+          ParseSection := ParseSection + STYLE_HEADER +
+                          MergeStringArray(
+                              Copy(line_split, i+1, Length(line_split)-1),
+                              ' '
+                          ) + STYLE_RESET;
+          skip := Length(line_split);
+        end;
         SUB_HEADER: continue;
         STYLE: continue;
         COLOR: continue;
         RESET_ALL: continue;
         else
+        begin
+          { Leave out any unimplemented Switches }
+          if pos('{$', line_split[i]) = 1 then
+            continue;
           ParseSection := ParseSection + line_split[i] + ' ';
         end;
+        end;
       end;
+
       ParseSection := ParseSection + sLineBreak;
     end;
 

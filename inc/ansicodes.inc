@@ -24,7 +24,6 @@
 { F - Is a Format String                         }
 { STYLE_ - Control Sequence modifying text-style }
 { COLOR_ - Control Sequence modifying text-color }
-{ }
 
 const
   { ANSI Control Sequence Introducer }
