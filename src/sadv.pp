@@ -61,7 +61,7 @@ begin
   end;
 
   path := ParamStr(1);
-  
+
   if not FileExists(path) then
   begin
     writeln('Input File not found: ', path);
@@ -105,4 +105,5 @@ begin
 {$IFDEF DEBUG}
   DebugPrintDocument(doc);
 {$ENDIF}
+  writeln(ParseSection(doc.root_section, True));
 end.

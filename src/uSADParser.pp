@@ -56,11 +56,13 @@ interface
     end;
 
   function ParseStructure(var ADocument: TSADocument): Boolean;
-  function ParseSection(const ASection: TSection; 
+  function ParseSection(const ASection: TSection;
                         const ADoChildren: Boolean): String;
 {$IFDEF DEBUG}
   procedure DebugPrintDocument(const ADocument: TSADocument);
 {$ENDIF}
+
+  {$INCLUDE inc/ansicodes.inc }
 
   const
     { Constants of valid switches }
@@ -74,12 +76,16 @@ interface
     STYLE          = '{$style';
     COLOR          = '{$color';
     RESET_ALL      = '{$reset-all}';
-  
+
+    { Styling Constants }
+    STYLE_HEADER     = STYLE_BOLD+STYLE_UNDERLINE;
+    STYLE_SUB_HEADER = STYLE_UNDERLINE;
+
   var
     parse_error : String;
 implementation
   { Private Functions and Procedures }
-  
+
   procedure SetupSection(var ASection: TSection; const AName: String);
   begin
     ASection.name := AName;
@@ -168,7 +174,7 @@ implementation
         end;
 
         ADocument.title := MergeStringArray(
-                              Copy(split_line, 1, Length(split_line) - 1), 
+                              Copy(split_line, 1, Length(split_line) - 1),
                               ' '
                             );
       end;
@@ -191,7 +197,7 @@ implementation
 
         { Update Section-Path }
         SetLength(section_path, Length(section_path)+1);
-        section_path[HIGH(section_path)] := 
+        section_path[HIGH(section_path)] :=
                      @(curr_section^.children[HIGH(curr_section^.children)]);
         curr_section := @(section_path[HIGH(section_path)]);
       end;
@@ -213,7 +219,7 @@ implementation
       end;
       else
       begin
-        section_path[HIGH(section_path)]^.contents := 
+        section_path[HIGH(section_path)]^.contents :=
                     section_path[HIGH(section_path)]^.contents +
                     MergeStringArray(split_line, ' ') +
                     sLineBreak;
@@ -224,7 +230,7 @@ implementation
     ParseStructure := True;
   end;
 
-  function ParseSection(const ASection: TSection; 
+  function ParseSection(const ASection: TSection;
                         const ADoChildren: Boolean): String;
   var
     lines, line_split: TStringDynArray;
@@ -261,7 +267,7 @@ implementation
       ParseSection := ParseSection + ParseSection(section, True);
   end;
 
-{$IFDEF DEBUG} 
+{$IFDEF DEBUG}
   function MakeIndent(const AAmount: Integer): String;
   var
     i: Integer;
@@ -269,7 +275,7 @@ implementation
     MakeIndent := '';
     for i := 1 to AAmount do
       MakeIndent := MakeIndent + ' ';
-  end; 
+  end;
 
   procedure DebugPrintSection(const ASection: TSection;
                               const AIndent, AIndentIncrease: Integer);
@@ -281,7 +287,7 @@ implementation
     writeln(MakeIndent(AIndent+AIndentIncrease), 'contents := ''', sLineBreak,
             ASection.contents);
     writeln(MAkeIndent(AIndent+AIndentIncrease), '''');
-    writeln(MakeIndent(AIndent+AIndentIncrease), 
+    writeln(MakeIndent(AIndent+AIndentIncrease),
             'children: array of TSection {');
     for sec in ASection.children do
       DebugPrintSection(sec, AIndent+AIndentIncrease, AIndentIncrease);
@@ -305,7 +311,7 @@ implementation
     writeln(MakeIndent(indent), 'root_section: TSection {');
     indent := INDENT_INCREASE + indent;
     writeln(MakeIndent(indent), 'name := ', ADocument.root_section.name);
-    writeln(MakeIndent(indent), 'contents := ''', sLineBreak, 
+    writeln(MakeIndent(indent), 'contents := ''', sLineBreak,
             ADocument.root_section.contents);
     writeln(MakeIndent(indent), '''');
     writeln(MakeIndent(indent), 'children: array of TSection {');
