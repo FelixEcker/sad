@@ -4,7 +4,7 @@ unit uSADParser;
 { uSADParser.pp ; Parsing functions for simple-ansi-documents }
 { Author: Marie Eckert                                        }
 
-(* Copyright (c) 2022, Felix Eckert                                           *)
+(* Copyright (c) 2022, Marie Eckert                                           *)
 (*                                                                            *)
 (* Redistribution and use in source and binary forms, with or without         *)
 (* modification, are permitted provided that the following conditions are met:*)

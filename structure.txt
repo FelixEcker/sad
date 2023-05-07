@@ -1,0 +1,105 @@
+TSADocument {
+  current_line := {$end-section}
+  line_number  := 43
+  title        := 
+  root_section: TSection {
+    name := .
+    contents := '
+{$preserve-mode style}
+
+
+    '
+    children: array of TSection {
+      TSection { 
+        name := general
+        contents := '
+{$head} What should SAD be?
+SAD should be kept simple and be able to be formatted properly within a standard ANSI console.
+This means that there won't be LaTeX, Image or similar support within a standard SAD file.
+
+        '
+        children: array of TSection {
+        }
+      }
+      TSection { 
+        name := modes
+        contents := '
+{$head} List of Mode-Switches
+
+Mode-Switches are used to set formatting, meta data and more. They are formatted like
+this:
+{$color dim} {{$name <parameter>} <parameter> {$reset}
+
+{$sub-head} mode-list
+  meta <author/date> } <value>
+    Set a Meta value
+  preserve-mode <style/color>
+    Set the Preserve mode (which value remains after reset switch)
+  start
+    Start the Document
+  title
+    Set the Document title
+  begin-section
+    Open a new Document-Section
+  end-section
+    Close the current Document-Section
+  head
+    Format line as a Header
+  sub-head
+    Format line as Sub-Header
+  style <style>
+    Set the Style
+  color <color> [back]
+    Set the Color
+  reset
+    Reset Formatting, regard preserve-mode
+  reset-all
+    Reset Formatting, disregard preserver-mode
+
+        '
+        children: array of TSection {
+        }
+      }
+    }
+  }
+}
+style} 
+ 
+ 
+[1m[4mWhat should SAD be?[0m
+SAD should be kept simple and be able to be formatted properly within a standard ANSI console. 
+This means that there won't be LaTeX, Image or similar support within a standard SAD file. 
+ 
+[1m[4mList of Mode-Switches[0m
+ 
+Mode-Switches are used to set formatting, meta data and more. They are formatted like 
+this: 
+dim} {{$name <parameter>} <parameter> 
+ 
+[4mmode-list[0m
+  meta <author/date> } <value> 
+    Set a Meta value 
+  preserve-mode <style/color> 
+    Set the Preserve mode (which value remains after reset switch) 
+  start 
+    Start the Document 
+  title 
+    Set the Document title 
+  begin-section 
+    Open a new Document-Section 
+  end-section 
+    Close the current Document-Section 
+  head 
+    Format line as a Header 
+  sub-head 
+    Format line as Sub-Header 
+  style <style> 
+    Set the Style 
+  color <color> [back] 
+    Set the Color 
+  reset 
+    Reset Formatting, regard preserve-mode 
+  reset-all 
+    Reset Formatting, disregard preserver-mode 
+ 
+
