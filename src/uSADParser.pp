@@ -266,7 +266,14 @@ implementation
                           ) + STYLE_RESET;
           skip := Length(line_split);
         end;
-        SUB_HEADER: continue;
+        SUB_HEADER: begin
+          ParseSection := ParseSection + STYLE_SUB_HEADER +
+                          MergeStringArray(
+                              Copy(line_split, i+1, Length(line_split)-1),
+                              ' '
+                          ) + STYLE_RESET;
+          skip := Length(line_split);
+        end;
         STYLE: continue;
         COLOR: continue;
         RESET_ALL: continue;
