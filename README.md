@@ -18,12 +18,10 @@ By default, the File will be Formatted using ANSI-escapes and output to STDOUT. 
 
 **Arguments** <br>
 
-| Name         | Parameters | Description                         |
-| ------------ | ---------- | ----------------------------------- |
-| -pm / --meta |            | Prints the documents Meta-Data      |
-| -x           |            | Convert to HTML                     |
-| --style      | path       | Specify a CSS for the HTML export   |
-| -vw          |            | Enable Verbose mode for HTML export |
+| Name          | Parameters | Description                         |
+| ------------- | ---------- | ----------------------------------- |
+| -pm / --meta  |            | Prints the documents Meta-Data      |
+| -l  / --lines |            | Print linenumbers alongside the converted output |
 
 ### Installation
 **AUR** <br>
