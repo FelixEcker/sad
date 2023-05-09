@@ -34,15 +34,18 @@ program sadv;
 (* OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF     *)
 (* ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                                 *)
 
-uses SysUtils, Types, uPathResolve, uSADParser, dos;
+{$H+}
+
+uses SysUtils, Types, StrUtils, uPathResolve, uSADParser, dos;
 
 const
   VERSION = '1.2.2';
 var
-  i, lastparam: Integer;
-  path, stylepath, _line, required_section, cparam: String;
-  print_meta, print_lines, as_html, verbose_writing: Boolean;
-  outfile: TextFile;
+  i: Integer;
+  path, required_section, cparam: String;
+  converted: String;
+  converted_lines: TStringDynArray;
+  print_meta, print_lines: Boolean;
   doc: TSADocument;
 begin
   if (ParamCount() = 0) then
@@ -53,8 +56,6 @@ begin
     writeln('Parameters: ');
     writeln('-pm, --meta          Print Meta-Information');
     writeln('-l,  --lines         Print Line-Numbers');
-    writeln('-x,  --html          Output as HTML');
-    writeln('  ,  --style <path>  Set the HTML Style Sheet');
     writeln('-vw                  Verbose Writing');
     writeln;
     halt;
@@ -71,8 +72,6 @@ begin
   required_section := '.';
   print_meta := False;
   print_lines := False;
-  as_html := False;
-  verbose_writing := False;
   for i := 2 to ParamCount() do
   begin
     cparam := ParamStr(i);
@@ -85,13 +84,7 @@ begin
     if (cparam = '-pm') or (cparam = '--meta') then
       print_meta := True
     else if (cparam = '-l') or (cparam = '--lines') then
-      print_lines := True
-    else if (cparam = '-x') or (cparam = '--html') then
-      as_html := True
-    else if (cparam = '--style') then
-      stylepath := ParamStr(i)
-    else if (cparam = '-vw') then
-      verbose_writing := True;
+      print_lines := True;
   end;
 
   Assign(doc.doc_file, path);
@@ -102,8 +95,19 @@ begin
     writeln('--> ', parse_error);
     halt;
   end;
+
 {$IFDEF DEBUG}
   DebugPrintDocument(doc);
 {$ENDIF}
-  writeln(ParseSection(doc.root_section, True));
+
+  converted := ParseSection(doc.root_section, True);
+  if not print_lines then
+  begin
+    writeln(converted);
+    halt;
+  end;
+
+  converted_lines := SplitString(converted, sLineBreak);
+  for i := 0 to Length(converted_lines) - 1 do
+    writeln(Format('%.3d %s', [i+1, converted_lines[i]]));
 end.

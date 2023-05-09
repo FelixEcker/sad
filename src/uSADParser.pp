@@ -32,7 +32,7 @@ unit uSADParser;
 (* OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF     *)
 (* ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                                 *)
 
-{$H+}{$R+}
+{$H+}
 
 interface
   uses SysUtils, StrUtils, Types, uANSIUtils;
@@ -128,7 +128,7 @@ implementation
   var
     finished_head: Boolean;
     section_path: TPSectionDynArray;
-    curr_section: PSection;
+    {curr_section: PSection;}
     tmp_section: TSection;
     split_line: TStringDynArray;
   begin
@@ -149,7 +149,7 @@ implementation
       currently in }
     SetLength(section_path, 1);
     section_path[0] := @ADocument.root_section;
-    curr_section := section_path[0];
+    {curr_section := section_path[0];}
 
     finished_head := False;
     while not eof(ADocument.doc_file) do
@@ -240,7 +240,7 @@ implementation
         section_path[HIGH(section_path)] :=
                      @(section_path[HIGH(section_path)-1]^.children[
                         HIGH(section_path[HIGH(section_path)-1]^.children)]);
-        curr_section := @(section_path[HIGH(section_path)]);
+        {curr_section := @(section_path[HIGH(section_path)]);}
       end;
       SECTION_END: begin
         if not finished_head then
@@ -256,7 +256,7 @@ implementation
         end;
 
         SetLength(section_path, HIGH(section_path));
-        curr_section := section_path[HIGH(section_path)];
+        {curr_section := section_path[HIGH(section_path)];}
       end;
       else
       begin
@@ -276,12 +276,15 @@ implementation
   var
     lines, line_split: TStringDynArray;
     current_line, write_line, last_look_switch, last_look_value: String;
-    i, skip, preserved_switch: Integer;
+    i, skip: Integer;
     section: TSection;
   begin
     ParseSection := '';
 
     lines := SplitString(ASection.contents, sLineBreak);
+
+    last_look_switch := '';
+    last_look_value := '';
 
     for current_line in lines do
     begin
