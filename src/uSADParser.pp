@@ -38,21 +38,25 @@ interface
   uses SysUtils, StrUtils, Types;
 
   type
+    PSADocument = ^TSADocument;
+
     TSection = record
-      name     : String;
-      children : array of TSection;
-      contents : String;
+      owning_document : PSADocument;
+      name            : String;
+      children        : array of TSection;
+      contents        : String;
     end;
 
     PSection = ^TSection;
     TPSectionDynArray = array of PSection;
 
     TSADocument = record
-      doc_file     : TextFile;
-      current_line : String;
-      line_number  : Integer;
-      root_section : TSection;
-      title        : String;
+      doc_file      : TextFile;
+      current_line  : String;
+      line_number   : Integer;
+      root_section  : TSection;
+      title         : String;
+      preserve_mode : Integer;
     end;
 
   function ParseStructure(var ADocument: TSADocument): Boolean;
@@ -69,17 +73,24 @@ interface
     DEFINE_META    = '{$meta';
     START_DOCUMENT = '{$start}';
     DOCUMENT_TITLE = '{$title}';
+    PRESERVE_MODE  = '{$preserve-mode';
     SECTION_BEGIN  = '{$begin-section}';
     SECTION_END    = '{$end-section}';
     HEADER         = '{$head}';
     SUB_HEADER     = '{$sub-head}';
     STYLE          = '{$style';
     COLOR          = '{$color';
+    RESET_         = '{$reset}';
     RESET_ALL      = '{$reset-all}';
 
     { Styling Constants }
     STYLE_HEADER     = STYLE_BOLD+STYLE_UNDERLINE;
     STYLE_SUB_HEADER = STYLE_UNDERLINE;
+
+    { Preservation Modes }
+    PRESERVE_MODE_NONE  = 0;
+    PRESERVE_MODE_STYLE = 1;
+    PRESERVE_MODE_COLOR = 2;
 
   var
     parse_error : String;
@@ -180,6 +191,31 @@ implementation
                               ' '
                             );
       end;
+      PRESERVE_MODE: begin
+        if finished_head then
+        begin
+          parse_error := 'Cannot set preservation mode outside of the '+
+                         'document header';
+          exit;
+        end;
+
+        if Length(split_line) < 2 then
+        begin
+          parse_error := 'preserve-mode switch requires one parameter: '+
+                         '"style" or "color"';
+          exit;
+        end;
+
+        case split_line[1] of
+        'style': ADocument.preserve_mode := PRESERVE_MODE_STYLE;
+        'color': ADocument.preserve_mode := PRESERVE_MODE_COLOR;
+        else
+        begin
+          parse_error := 'Invalid parameter "'+ split_line[1] +
+                         '" for preserve-mode switch';
+          exit;
+        end; { end else } end; { end case }
+      end;
       SECTION_BEGIN: begin
         if not finished_head then
         begin
@@ -195,6 +231,7 @@ implementation
 
         { Add Section }
         SetupSection(tmp_section, split_line[1]);
+        tmp_section.owning_document := @ADocument;
         AddSectionChild(section_path[HIGH(section_path)]^, tmp_section);
 
         { Update Section-Path }
@@ -237,7 +274,7 @@ implementation
   var
     lines, line_split: TStringDynArray;
     current_line, write_line: String;
-    i, skip: Integer;
+    i, skip, preserved_switch: Integer;
     section: TSection;
   begin
     ParseSection := '';
@@ -276,6 +313,7 @@ implementation
         end;
         STYLE: continue;
         COLOR: continue;
+        RESET_: continue;
         RESET_ALL: continue;
         else
         begin
