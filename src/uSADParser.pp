@@ -32,7 +32,7 @@ unit uSADParser;
 (* OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF     *)
 (* ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                                 *)
 
-{$H+}
+{$H+}{$R+}
 
 interface
   uses SysUtils, StrUtils, Types, uANSIUtils;
@@ -234,8 +234,12 @@ implementation
 
         { Update Section-Path }
         SetLength(section_path, Length(section_path)+1);
+
+        { Using curr_section leads to a SEGFAULT which im not up to debug
+          at the moment }
         section_path[HIGH(section_path)] :=
-                     @(curr_section^.children[HIGH(curr_section^.children)]);
+                     @(section_path[HIGH(section_path)-1]^.children[
+                        HIGH(section_path[HIGH(section_path)-1]^.children)]);
         curr_section := @(section_path[HIGH(section_path)]);
       end;
       SECTION_END: begin
