@@ -56,7 +56,7 @@ interface
       line_number   : Integer;
       root_section  : TSection;
       title         : String;
-      preserve_mode : Integer;
+      preserve_mode : String;
     end;
 
   function ParseStructure(var ADocument: TSADocument): Boolean;
@@ -205,8 +205,8 @@ implementation
         end;
 
         case Copy(split_line[1], 1, Length(split_line[1])-1) of
-        'style': ADocument.preserve_mode := PRESERVE_MODE_STYLE;
-        'color': ADocument.preserve_mode := PRESERVE_MODE_COLOR;
+        'style': ADocument.preserve_mode := STYLE;
+        'color': ADocument.preserve_mode := COLOR;
         else
         begin
           parse_error := 'Invalid parameter "'+ split_line[1] +
@@ -275,7 +275,7 @@ implementation
                         const ADoChildren: Boolean): String;
   var
     lines, line_split: TStringDynArray;
-    current_line, write_line: String;
+    current_line, write_line, last_look_switch, last_look_value: String;
     i, skip, preserved_switch: Integer;
     section: TSection;
   begin
@@ -313,17 +313,26 @@ implementation
                           ) + STYLE_RESET;
           skip := Length(line_split);
         end;
-        STYLE: begin
+        STYLE, COLOR: begin
           if Length(line_split) <= i+1 then
             continue;
 
-          ParseSection := ParseSection + NameToEscape(Copy(
-            line_split[i+1], 1, Length(line_split[i+1])-1));
+          last_look_switch := line_split[i];
+          last_look_value  := Copy(
+            line_split[i+1], 1, Length(line_split[i+1])-1);
+
+          ParseSection := ParseSection + NameToEscape(last_look_value);
 
           skip := 1;
         end;
-        COLOR: continue;
-        RESET_: continue;
+        RESET_: begin
+          ParseSection := ParseSection + STYLE_RESET;
+
+          if last_look_switch = ASection.owning_document^.preserve_mode then
+            ParseSection := ParseSection + NameToEscape(last_look_value);
+
+          last_look_switch := '';
+        end;
         RESET_ALL: ParseSection := ParseSection + STYLE_RESET;
         else
         begin
