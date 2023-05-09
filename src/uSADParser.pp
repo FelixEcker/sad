@@ -35,7 +35,7 @@ unit uSADParser;
 {$H+}
 
 interface
-  uses SysUtils, StrUtils, Types;
+  uses SysUtils, StrUtils, Types, uANSIUtils;
 
   type
     PSADocument = ^TSADocument;
@@ -65,8 +65,6 @@ interface
 {$IFDEF DEBUG}
   procedure DebugPrintDocument(const ADocument: TSADocument);
 {$ENDIF}
-
-  {$INCLUDE inc/ansicodes.inc}
 
   const
     { Constants of valid switches }
@@ -206,7 +204,7 @@ implementation
           exit;
         end;
 
-        case split_line[1] of
+        case Copy(split_line[1], 1, Length(split_line[1])-1) of
         'style': ADocument.preserve_mode := PRESERVE_MODE_STYLE;
         'color': ADocument.preserve_mode := PRESERVE_MODE_COLOR;
         else
