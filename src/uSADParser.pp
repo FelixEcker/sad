@@ -318,7 +318,9 @@ implementation
             continue;
 
           ParseSection := ParseSection + NameToEscape(Copy(
-            line_split[i+1], 1, Length(line_split[i+1])-2));
+            line_split[i+1], 1, Length(line_split[i+1])-1));
+
+          skip := 1;
         end;
         COLOR: continue;
         RESET_: continue;
