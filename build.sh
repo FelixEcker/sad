@@ -4,7 +4,7 @@ mkdir -p out
 rm out/*
 
 if [[ $1 == debug ]]; then
-  fpc src/sadv.pp -FE"out/" -g -dDEBUG
+  fpc src/sadv.pp -Fu"inc/" -FE"out/" -g -dDEBUG
 else
-  fpc src/sadv.pp -FE"out/" -O4 -Xs -XX
+  fpc src/sadv.pp -Fu"inc/" -FE"out/" -O4 -Xs -XX
 fi
