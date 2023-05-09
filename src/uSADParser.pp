@@ -309,10 +309,16 @@ implementation
                           ) + STYLE_RESET;
           skip := Length(line_split);
         end;
-        STYLE: continue;
+        STYLE: begin
+          if Length(line_split) <= i+1 then
+            continue;
+
+          ParseSection := ParseSection + NameToEscape(Copy(
+            line_split[i+1], 1, Length(line_split[i+1])-2));
+        end;
         COLOR: continue;
         RESET_: continue;
-        RESET_ALL: continue;
+        RESET_ALL: ParseSection := ParseSection + STYLE_RESET;
         else
         begin
           { Leave out any unimplemented Switches }
