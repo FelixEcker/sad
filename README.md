@@ -3,20 +3,21 @@
 
 ## About
 SAD is a document-format, designed to be displayed in ANSI compatible terminals through a viewer
-program like this. Formatting is handled through `mode-switches` in plain text.
+program like sadv. Formatting is handled through `mode-switches` in plain text.
 
 This Repository has Pascal-Units for parsing a sad file, you may use these Units in your projects
 as long as you follow the license specified in the LICENSE file and in the source.
 
 ## sadv
 sadv(iewer) uses these Units for displaying a sad in console or converting it to HTML.
+Its source code can be found in the `sadv` subdirectory.
 
 ### Usage
 `sadv <file> [parameters] [:section]` <br>
 
 By default, the File will be Formatted using ANSI-escapes and output to STDOUT. <br>
 
-**Arguments** <br>
+**Parameters** <br>
 
 | Name          | Parameters | Description                         |
 | ------------- | ---------- | ----------------------------------- |
@@ -44,6 +45,10 @@ sh install.sh
 * *Only* ANSI codes can be used for formatting
 * *Only* Text is supported
 * Syntax can be limiting or annoying
+
+## sadhtml
+sadhtml is a tool to convert a sad to a html document, it will be implemented in the
+`sadhtml` subdirectory.
 
 ## Example
 ```text
