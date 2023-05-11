@@ -120,6 +120,8 @@ implementation
   var
     str: String;
   begin
+    MergeStringArray := '';
+    MergeStringArray := '';
     if Length(AArray) < 1 then exit;
 
     MergeStringArray := AArray[0];
@@ -302,7 +304,7 @@ implementation
                         const ADoChildren: Boolean): String;
   var
     lines, line_split: TStringDynArray;
-    current_line, write_line, last_look_switch, last_look_value: String;
+    current_line, last_look_switch, last_look_value: String;
     i, skip: Integer;
     section: TSection;
   begin
