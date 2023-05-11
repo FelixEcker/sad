@@ -56,8 +56,8 @@ function FindSection(const ADocument: TSADocument;
       end;
     end;
 
-  for sec in ASec.children do
-    _FindSection := _FindSection(sec, ASecName);
+    for sec in ASec.children do
+      _FindSection := _FindSection(sec, ASecName);
   end;
 begin
 
