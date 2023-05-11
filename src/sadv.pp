@@ -38,8 +38,37 @@ program sadv;
 
 uses SysUtils, Types, StrUtils, uPathResolve, uSADParser, dos;
 
+function FindSection(const ADocument: TSADocument;
+                     const AName: String): TSection;
+
+  (* Local function for recursive section search *)
+  function _FindSection(const ASec: TSection; const ASecName: String): TSection;
+  var
+    sec: TSection;
+  begin
+    _FindSection := ASec;
+    for sec in ASec.children do
+    begin
+      if sec.name = ASecName then
+      begin
+        _FindSection := sec;
+        exit;
+      end;
+    end;
+
+  for sec in ASec.children do
+    _FindSection := _FindSection(sec, ASecName);
+  end;
+begin
+
+  FindSection := ADocument.root_section;
+  if AName = '.' then exit;
+
+  FindSection := _FindSection(ADocument.root_section, AName);
+end;
+
 const
-  VERSION = '1.2.2';
+  VERSION = '1.3.0';
 var
   i: Integer;
   path, required_section, cparam: String;
@@ -100,7 +129,7 @@ begin
   DebugPrintDocument(doc);
 {$ENDIF}
 
-  converted := ParseSection(doc.root_section, True);
+  converted := ParseSection(FindSection(doc, required_section), True);
 
   if print_meta then
     for meta in doc.meta_data do

@@ -15,6 +15,7 @@ Mode-Switches are used to set formatting, meta data and more. They are formatted
 this:
 {$color dim} {{$name <parameter>} <parameter> {$reset}
 
+{$begin-section} mode-list
 {$sub-head} mode-list
   meta <author/date> } <value>
     Set a Meta value
@@ -40,4 +41,5 @@ this:
     Reset Formatting, regard preserve-mode
   reset-all
     Reset Formatting, disregard preserver-mode
+{$end-section}
 {$end-section}
