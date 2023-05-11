@@ -50,10 +50,17 @@ interface
     PSection = ^TSection;
     TPSectionDynArray = array of PSection;
 
+    TMetaData = record
+      name    : String;
+      content : String;
+    end;
+    TMetaDataDynArray = array of TMetaData;
+
     TSADocument = record
       doc_file      : TextFile;
       current_line  : String;
       line_number   : Integer;
+      meta_data     : TMetaDataDynArray;
       root_section  : TSection;
       title         : String;
       preserve_mode : String;
@@ -157,6 +164,10 @@ implementation
       inc(ADocument.line_number);
       readln(ADocument.doc_file, ADocument.current_line);
 
+      if (Length(ADocument.current_line) = 0)
+      or (Trim(ADocument.current_line) = '') then
+        continue;
+
       split_line := SplitString(ADocument.current_line, ' ');
 
       case split_line[0] of
@@ -167,6 +178,22 @@ implementation
                          'document head!';
           exit;
         end;
+
+        if Length(split_line) = 1 then
+        begin
+          parse_error := 'The Meta-Data switch requires a Name!';
+          exit;
+        end;
+
+        SetLength(ADocument.meta_data, Length(ADocument.meta_data)+1);
+        ADocument.meta_data[HIGH(ADocument.meta_data)].name :=
+          Copy(split_line[1], 1, Length(split_line[1])-1);
+
+        if Length(split_line) = 2 then
+          continue;
+
+        ADocument.meta_data[HIGH(ADocument.meta_data)].content :=
+          MergeStringArray(Copy(split_line, 2, Length(split_line)-1), ' ');
       end;
       START_DOCUMENT: begin
         if finished_head then

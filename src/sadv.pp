@@ -47,6 +47,7 @@ var
   converted_lines: TStringDynArray;
   print_meta, print_lines: Boolean;
   doc: TSADocument;
+  meta: TMetaData;
 begin
   if (ParamCount() = 0) then
   begin
@@ -56,7 +57,6 @@ begin
     writeln('Parameters: ');
     writeln('-pm, --meta          Print Meta-Information');
     writeln('-l,  --lines         Print Line-Numbers');
-    writeln('-vw                  Verbose Writing');
     writeln;
     halt;
   end;
@@ -101,6 +101,11 @@ begin
 {$ENDIF}
 
   converted := ParseSection(doc.root_section, True);
+
+  if print_meta then
+    for meta in doc.meta_data do
+      writeln('meta-data: ', meta.name, ': ', meta.content);
+
   if not print_lines then
   begin
     writeln(converted);
