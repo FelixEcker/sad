@@ -80,7 +80,7 @@ var
 begin
   if (ParamCount() = 0) then
   begin
-    writeln('SAD Command Line Viewer ; ', VERSION, ' by Felix Eckert');
+    writeln('SAD Command Line Viewer ; ', VERSION, ' by Marie Eckert');
     writeln('Usage: sadv [file] <parameters> <:section>');
     writeln;
     writeln('Parameters: ');

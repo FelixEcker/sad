@@ -38,10 +38,10 @@ program sadhtml;
 
 {$H+}
 
-uses SysUtils, uSADParser, uSADHTML;
+uses SysUtils, uSADParser, uSADHTML, uPathResolve;
 
 const
-  DEFAULT_STYLESHEET = '$XDG_CONFIG_HOME/sadhtml/default.css';
+  DEFAULT_STYLESHEET = '$HOME/.config/sadhtml/default.css';
   VERSION = '1.0.0';
 var
   i: Integer;
@@ -87,7 +87,7 @@ begin
       print_meta := True
     else if (cparam = '-s') or (cparam = '--style') then
     begin
-      if ParamCount() <= i+1 then
+      if ParamCount() < i+1 then
       begin
         writeln(cparam, ' requires one additional parameter: path to file');
         exit;
@@ -97,6 +97,7 @@ begin
     end;
   end;
 
+  style_path := ResolveEnvsInPath(style_path);
   if not FileExists(style_path) then
   begin
     writeln('Stylesheet file not found: ', style_path);
