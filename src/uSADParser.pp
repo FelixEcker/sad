@@ -92,11 +92,6 @@ interface
     STYLE_HEADER     = STYLE_BOLD+STYLE_UNDERLINE;
     STYLE_SUB_HEADER = STYLE_UNDERLINE;
 
-    { Preservation Modes }
-    PRESERVE_MODE_NONE  = 0;
-    PRESERVE_MODE_STYLE = 1;
-    PRESERVE_MODE_COLOR = 2;
-
   var
     parse_error : String;
 implementation
