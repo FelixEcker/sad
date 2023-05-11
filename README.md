@@ -35,6 +35,10 @@ cd sad
 sh install.sh
 ```
 
+## sadhtml
+sadhtml is a tool to convert a sad to a html document, it will be implemented in the
+`sadhtml` subdirectory.
+
 ## Features and Limitations
 **Features** <br>
 * Supports Formatting using Standard ANSI codes (see `Styles and Colors` in `Example` section)
@@ -45,10 +49,6 @@ sh install.sh
 * *Only* ANSI codes can be used for formatting
 * *Only* Text is supported
 * Syntax can be limiting or annoying
-
-## sadhtml
-sadhtml is a tool to convert a sad to a html document, it will be implemented in the
-`sadhtml` subdirectory.
 
 ## Example
 ```text
