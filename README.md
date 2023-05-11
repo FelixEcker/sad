@@ -3,13 +3,14 @@
 
 ## About
 SAD is a document-format, designed to be displayed in ANSI compatible terminals through a viewer
-program like this. Formatting is handled through `mode-switches` in plain text.
+program like sadv. Formatting is handled through `mode-switches` in plain text.
 
 This Repository has Pascal-Units for parsing a sad file, you may use these Units in your projects
 as long as you follow the license specified in the LICENSE file and in the source.
 
 ## sadv
 sadv(iewer) uses these Units for displaying a sad in console or converting it to HTML.
+Its source code can be found in the `sadv` subdirectory.
 
 ### Rewrite
 A rewrite of the parsing unit and sav is currently being done on the fpc_rewrite branch,
@@ -23,14 +24,12 @@ the goals of this rewrite are:
 
 By default, the File will be Formatted using ANSI-escapes and output to STDOUT. <br>
 
-**Arguments** <br>
+**Parameters** <br>
 
-| Name         | Parameters | Description                         |
-| ------------ | ---------- | ----------------------------------- |
-| -pm / --meta |            | Prints the documents Meta-Data      |
-| -x           |            | Convert to HTML                     |
-| --style      | path       | Specify a CSS for the HTML export   |
-| -vw          |            | Enable Verbose mode for HTML export |
+| Name          | Parameters | Description                         |
+| ------------- | ---------- | ----------------------------------- |
+| -pm / --meta  |            | Prints the documents Meta-Data      |
+| -l  / --lines |            | Print linenumbers alongside the converted output |
 
 ### Installation
 **AUR** <br>
@@ -42,6 +41,10 @@ git clone https://github.com/FelixEcker/sad.git
 cd sad
 sh install.sh
 ```
+
+## sadhtml
+sadhtml is a tool to convert a sad to a html document, it will be implemented in the
+`sadhtml` subdirectory.
 
 ## Features and Limitations
 **Features** <br>

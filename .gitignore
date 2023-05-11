@@ -1,7 +1,6 @@
 out/
 *.o
 snf
-sadv
 *.exe
 *.html
 *.swp
