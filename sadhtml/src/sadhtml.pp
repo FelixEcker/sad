@@ -45,11 +45,12 @@ const
   VERSION = '1.0.0';
 var
   i: Integer;
-  path, style_path, required_section, cparam: String;
+  path, out_path, style_path, required_section, cparam: String;
   converted: String;
   print_meta: Boolean;
   doc: TSADocument;
   meta: TMetaData;
+  out_file: TextFile;
 begin
   if (ParamCount() = 0) then
   begin
@@ -57,6 +58,7 @@ begin
     writeln('Usage: sadhtml [file] <parameters> <:section>');
     writeln;
     writeln('Parameters: ');
+    writeln('-o,  --out   <file>  Specify output file');
     writeln('-m,  --meta          Include Meta-Information');
     writeln('-s,  --style <file>  Override default Stylesheet');
     writeln;
@@ -71,6 +73,7 @@ begin
     halt;
   end;
 
+  out_path := path+'.html';
   style_path := DEFAULT_STYLESHEET;
   required_section := '.';
   print_meta := False;
@@ -94,7 +97,8 @@ begin
       end;
 
       style_path := ParamStr(i+1);
-    end;
+    end else if (cparam = '-s') or (cparam = '--out') then
+      out_path := ParamStr(i+1);
   end;
 
   style_path := ResolveEnvsInPath(style_path);
@@ -112,6 +116,7 @@ begin
     writeln('--> ', parse_error);
     halt;
   end;
+  Close(doc.doc_file);
 
 {$IFDEF DEBUG}
   DebugPrintDocument(doc);
@@ -119,5 +124,9 @@ begin
 
   converted := GenerateHTML(FindSection(doc, required_section), True,
                             style_path);
-  writeln(converted);
+
+  Assign(out_file, out_path);
+  ReWrite(out_file);
+  Write(out_file, converted);
+  Close(out_file);
 end.
