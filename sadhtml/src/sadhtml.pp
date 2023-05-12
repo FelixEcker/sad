@@ -101,7 +101,7 @@ begin
   if not FileExists(style_path) then
   begin
     writeln('Stylesheet file not found: ', style_path);
-    exit;
+    {exit;}
   end;
 
   Assign(doc.doc_file, path);
@@ -117,5 +117,6 @@ begin
   DebugPrintDocument(doc);
 {$ENDIF}
 
-  {converted := HTMLParseSection();}
+  converted := HTMLParseSection(FindSection(doc, required_section), True);
+  writeln(converted);
 end.

@@ -66,6 +66,10 @@ interface
       preserve_mode : String;
     end;
 
+  function MergeStringArray(AArray: TStringDynArray;
+                            const AJoinStr: String): String;
+  function FindSection(const ADocument: TSADocument;
+                     const AName: String): TSection;
   function ParseStructure(var ADocument: TSADocument): Boolean;
   function ParseSection(const ASection: TSection;
                         const ADoChildren: Boolean): String;
@@ -110,6 +114,9 @@ implementation
     ASection.children[HIGH(ASection.children)] := AChild;
   end;
 
+  { Public Functions and Procedures }
+
+
   function MergeStringArray(AArray: TStringDynArray;
                             const AJoinStr: String): String;
   var
@@ -126,7 +133,34 @@ implementation
       MergeStringArray := MergeStringArray + AJoinStr + str;
   end;
 
-  { Public Functions and Procedures }
+  function FindSection(const ADocument: TSADocument;
+                     const AName: String): TSection;
+    (* Local function for recursive section search *)
+    function _FindSection(const ASec: TSection; const ASecName: String): TSection;
+    var
+      sec: TSection;
+    begin
+      _FindSection := ASec;
+      for sec in ASec.children do
+      begin
+        if sec.name = ASecName then
+        begin
+          _FindSection := sec;
+          exit;
+        end;
+      end;
+
+      for sec in ASec.children do
+        _FindSection := _FindSection(sec, ASecName);
+    end;
+  begin
+
+    FindSection := ADocument.root_section;
+    if AName = '.' then exit;
+
+    FindSection := _FindSection(ADocument.root_section, AName);
+  end;
+
 
   function ParseStructure(var ADocument: TSADocument): Boolean;
   var
@@ -142,6 +176,11 @@ implementation
     ADocument.current_line := '';
     ADocument.line_number  := 0;
     SetupSection(ADocument.root_section, '.');
+    ADocument.root_section.owning_document := @ADocument;
+
+    if (ADocument.preserve_mode <> STYLE)
+    and (ADocument.preserve_mode <> COLOR) then
+      ADocument.preserve_mode := '';
 
     if TTextRec(ADocument.doc_file).Handle = 0 then
     begin
