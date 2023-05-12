@@ -44,74 +44,74 @@ h4 {
   font-weight: normal;
 }
 
-.coldefault {
+.colordefault {
   color: black;
 }
 
-.colblack {
+.colorblack {
   color: black;
 }
 
-.colred {
+.colorred {
   color: red;
 }
 
-.colgreen {
+.colorgreen {
   color: green;
 }
 
-.colbrown {
+.colorbrown {
   color: brown;
 }
 
-.colblue {
+.colorblue {
   color: blue;
 }
 
-.colmagenta {
+.colormoragenta {
   color: magenta;
 }
 
-.colcyan {
+.colorcyan {
   color: cyan;
 }
 
-.collightgray {
+.colorlightgray {
   color: lightgray;
 }
 
-.colrichcolors {
+.colorrichcolors {
 }
 
 .reset {
   color: black;
 }
 
-.colwhite {
+.colorwhite {
   color: white;
 }
 
-.stlbold {
+.sytlebold {
   font-weight: bold;
 }
 
-.stlitalic {
+.styleitalic {
   font-style: italic;
 }
 
-.stlunderline {
+.styleunderline {
   text-decoration: underline;
 }
 
-.stlstrike {
+.stylestrike {
   text-decoration: line-through;
 }
 
-.strloverline {
+.styleoverline {
   text-decoration: overline;
 }
 
-.stlfraktur {
+.stylefraktur {
   font-family: "Courier New", monospace;
   font-size: 90%;
   display: inline-block;
