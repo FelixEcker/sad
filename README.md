@@ -58,7 +58,6 @@ cd sad/sadhtml
 sh build.sh
 sudo mv out/sadhtml /usr/bin/sadhtml
 ```
-
 ## Features and Limitations
 **Features** <br>
 * Supports Formatting using Standard ANSI codes (see `Styles and Colors` in `Example` section)
