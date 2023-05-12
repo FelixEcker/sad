@@ -59,7 +59,7 @@ begin
     writeln;
     writeln('Parameters: ');
     writeln('-o,  --out   <file>  Specify output file');
-    writeln('-m,  --meta          Include Meta-Information');
+    {writeln('-m,  --meta          Include Meta-Information');}
     writeln('-s,  --style <file>  Override default Stylesheet');
     writeln;
     halt;

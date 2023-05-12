@@ -177,7 +177,8 @@ implementation
                         const AStylePath: String): String;
   var
     style_file: TextFile;
-    style, cont, tmp: String;
+    style, cont, tmp, author, date: String;
+    meta: TMetaData;
   begin
     GenerateHTML := '<!DOCTYPE html>'+
                     '<html><head><title>%s</title><meta charset="utf-8" />'+
@@ -196,7 +197,19 @@ implementation
     end;
 
     { Parse to HTML }
-    cont := '<h1>' + ASection.owning_document^.title + '</h1>';
+    cont := '<h1>' + ASection.owning_document^.title + '</h1><br />';
+
+    author := '';
+    date := '';
+    for meta in ASection.owning_document^.meta_data do
+      if meta.name = 'author' then
+        author := meta.content
+      else if meta.name = 'date' then
+        date := meta.content;
+
+    if (author <> '') and (date <> '') then
+      cont := cont + '<h4>' + author + ', ' + date +'</h4>';
+
     cont := cont + HTMLParseSection(ASection, ADoChildren);
 
     { Format and return }
