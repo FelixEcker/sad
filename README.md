@@ -32,8 +32,7 @@ You can find sadv on the AUR [here](https://aur.archlinux.org/packages/sadv). <b
 ```bash
 git clone https://github.com/FelixEcker/sad.git
 cd sad/sadv
-sh build.sh
-sudo mv out/sadv /usr/bin/sadv
+sh install.sh
 ```
 
 ## sadhtml
