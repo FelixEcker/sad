@@ -2,6 +2,7 @@
 {$meta date} 10-11-2022
 {$preserve-mode style}
 {$start}
+{$title} SAD Definition
 
 {$begin-section} general
 {$head} What should SAD be?
