@@ -38,35 +38,6 @@ program sadv;
 
 uses SysUtils, Types, StrUtils, uPathResolve, uSADParser, dos;
 
-function FindSection(const ADocument: TSADocument;
-                     const AName: String): TSection;
-
-  (* Local function for recursive section search *)
-  function _FindSection(const ASec: TSection; const ASecName: String): TSection;
-  var
-    sec: TSection;
-  begin
-    _FindSection := ASec;
-    for sec in ASec.children do
-    begin
-      if sec.name = ASecName then
-      begin
-        _FindSection := sec;
-        exit;
-      end;
-    end;
-
-    for sec in ASec.children do
-      _FindSection := _FindSection(sec, ASecName);
-  end;
-begin
-
-  FindSection := ADocument.root_section;
-  if AName = '.' then exit;
-
-  FindSection := _FindSection(ADocument.root_section, AName);
-end;
-
 const
   VERSION = '1.3.0';
 var
