@@ -39,6 +39,9 @@ interface
 
   function HTMLParseSection(const ASection: TSection;
                             const ADoChildren: Boolean): String;
+  function GenerateHTML(const ASection: TSection;
+                        const ADoChildren: Boolean;
+                        const AStylePath: String): String;
 implementation
   { Private Procedures/Functions }
 
@@ -58,14 +61,20 @@ implementation
     i, j, skip: Integer;
     section: TSection;
   begin
-    HTMLParseSection := '';
+    HTMLParseSection := '<div id="'+ASection.name+'">';
     preserve_mode := ASection.owning_document^.preserve_mode;
 
     lines := SplitString(ASection.contents, sLineBreak);
 
     for current_line in lines do
     begin
-      line_split := SplitString(current_line, ' ');
+      line_split := SplitString(
+        StringReplace(
+          StringReplace(current_line, '>', '&gt;', [rfReplaceAll]),
+          '<', '&lt;', [rfReplaceAll]
+        ),
+        ' '
+      );
 
       skip := 0;
       for i := 0 to Length(line_split) - 1 do
@@ -156,10 +165,47 @@ implementation
       HTMLParseSection := HTMLParseSection + '<br />' + sLineBreak;
     end;
 
-    if not ADoChildren then exit;
+    if ADoChildren then
+      for section in ASection.children do
+        HTMLParseSection := HTMLParseSection + HTMLParseSection(section, True);
 
-    for section in ASection.children do
-      HTMLParseSection := HTMLParseSection + HTMLParseSection(section, True);
+    HTMLParseSection := HTMLParseSection + '</div>';
+  end;
 
+  function GenerateHTML(const ASection: TSection;
+                        const ADoChildren: Boolean;
+                        const AStylePath: String): String;
+  var
+    style_file: TextFile;
+    style, cont, tmp: String;
+  begin
+    GenerateHTML := '<!DOCTYPE html>'+
+                    '<html><head><title>%s</title><meta charset="utf-8" />'+
+                    '</head><body><style>%s</style><center>%s</center></body>'+
+                    '</html>';
+
+    { Read style }
+    Assign(style_file, AStylePath);
+    ReSet(style_file);
+
+    style := '';
+    while not eof(style_file) do
+    begin
+      ReadLn(style_file, tmp);
+      style := style + tmp + sLineBreak;
+    end;
+
+    { Parse to HTML }
+    cont := '<h1>' + ASection.owning_document^.title + '</h1>';
+    cont := cont + HTMLParseSection(ASection, ADoChildren);
+
+    { Format and return }
+    GenerateHTML := Format(GenerateHTML,
+      [
+        ASection.owning_document^.title,
+        style,
+        cont
+      ]
+    );
   end;
 end.
