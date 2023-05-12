@@ -157,7 +157,12 @@ implementation
           { Leave out any unimplemented Switches }
           if pos('{$', line_split[i]) = 1 then
             continue;
-          HTMLParseSection := HTMLParseSection + line_split[i] + ' ';
+          HTMLParseSection := HTMLParseSection + StringReplace(
+                                                    line_split[i],
+                                                    ' ',
+                                                    '&nbsp;',
+                                                    [rfReplaceAll]
+                                                  ) + '&nbsp;';
         end;
         end;
       end;
