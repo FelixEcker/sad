@@ -31,14 +31,33 @@ You can find sadv on the AUR [here](https://aur.archlinux.org/packages/sadv). <b
 **From Source**
 ```bash
 git clone https://github.com/FelixEcker/sad.git
-cd sad
+cd sad/sadv
 sh install.sh
 ```
 
 ## sadhtml
-sadhtml is a tool to convert a sad to a html document, it will be implemented in the
-`sadhtml` subdirectory. It is currently being worked on in the 
+sadhtml is a tool to convert sad files to html documents.
 
+### Usage
+`sadhtml <file> [parameters] [:section]` <br>
+
+By default, the generated html will be saved at the same location with the extension
+`.sad.html`<br>
+
+**Parameters** <br>
+
+| Name          | Parameters | Description                 |
+| ------------- | ---------- | --------------------------- |
+| -o  / --out   | file       | Specify the Output file     |
+| -s  / --style | file       | Specify the Stylesheet file |
+
+### Installation
+```bash
+git clone https://github.com/FelixEcker/sad.git
+cd sad/sadhtml
+sh build.sh
+sudo mv out/sadhtml /usr/bin/sadhtml
+```
 ## Features and Limitations
 **Features** <br>
 * Supports Formatting using Standard ANSI codes (see `Styles and Colors` in `Example` section)

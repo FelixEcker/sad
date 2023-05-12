@@ -1,10 +1,12 @@
 {$mode fpc}
-program sadv;
+program sadhtml;
 
-{         sadv - Simple Ansi Document Viewer          }
-{                                                     }
-{ Author: Felix Eckert                                }
-{ Licensed under the 3-Clause BSD License. See below. }
+{  sadhtml - Simple Ansi Document to HTML converter  }
+{                                                    }
+{ Author: Marie Eckert                               }
+{ Licensed under the 3-Clause BSD License. See below }
+
+{ TODO: Potentially refactor the reused code from sadv into a shared unit }
 
 (* Copyright (c) 2022, Marie Eckert                                           *)
 (*                                                                            *)
@@ -36,27 +38,29 @@ program sadv;
 
 {$H+}
 
-uses SysUtils, Types, StrUtils, uPathResolve, uSADParser, dos;
+uses SysUtils, uSADParser, uSADHTML, uPathResolve;
 
 const
-  VERSION = '1.3.0';
+  DEFAULT_STYLESHEET = '$HOME/.config/sadhtml/default.css';
+  VERSION = '1.0.0';
 var
   i: Integer;
-  path, required_section, cparam: String;
+  path, out_path, style_path, required_section, cparam: String;
   converted: String;
-  converted_lines: TStringDynArray;
-  print_meta, print_lines: Boolean;
+  print_meta: Boolean;
   doc: TSADocument;
   meta: TMetaData;
+  out_file: TextFile;
 begin
   if (ParamCount() = 0) then
   begin
-    writeln('SAD Command Line Viewer ; ', VERSION, ' by Marie Eckert');
-    writeln('Usage: sadv [file] <parameters> <:section>');
+    writeln('SAD to HTML converter ; ', VERSION, ' by Marie Eckert');
+    writeln('Usage: sadhtml [file] <parameters> <:section>');
     writeln;
     writeln('Parameters: ');
-    writeln('-pm, --meta          Print Meta-Information');
-    writeln('-l,  --lines         Print Line-Numbers');
+    writeln('-o,  --out   <file>  Specify output file');
+    {writeln('-m,  --meta          Include Meta-Information');}
+    writeln('-s,  --style <file>  Override default Stylesheet');
     writeln;
     halt;
   end;
@@ -69,9 +73,10 @@ begin
     halt;
   end;
 
+  out_path := path+'.html';
+  style_path := DEFAULT_STYLESHEET;
   required_section := '.';
   print_meta := False;
-  print_lines := False;
   for i := 2 to ParamCount() do
   begin
     cparam := ParamStr(i);
@@ -81,10 +86,26 @@ begin
       break;
     end;
 
-    if (cparam = '-pm') or (cparam = '--meta') then
+    if (cparam = '-m') or (cparam = '--meta') then
       print_meta := True
-    else if (cparam = '-l') or (cparam = '--lines') then
-      print_lines := True;
+    else if (cparam = '-s') or (cparam = '--style') then
+    begin
+      if ParamCount() < i+1 then
+      begin
+        writeln(cparam, ' requires one additional parameter: path to file');
+        exit;
+      end;
+
+      style_path := ParamStr(i+1);
+    end else if (cparam = '-s') or (cparam = '--out') then
+      out_path := ParamStr(i+1);
+  end;
+
+  style_path := ResolveEnvsInPath(style_path);
+  if not FileExists(style_path) then
+  begin
+    writeln('Stylesheet file not found: ', style_path);
+    exit;
   end;
 
   Assign(doc.doc_file, path);
@@ -95,26 +116,17 @@ begin
     writeln('--> ', parse_error);
     halt;
   end;
+  Close(doc.doc_file);
 
 {$IFDEF DEBUG}
   DebugPrintDocument(doc);
 {$ENDIF}
 
-  converted := ParseSection(FindSection(doc, required_section), True);
+  converted := GenerateHTML(FindSection(doc, required_section), True,
+                            style_path);
 
-  if print_meta then
-    for meta in doc.meta_data do
-      writeln('meta-data: ', meta.name, ': ', meta.content);
-
-  writeln(STYLE_HEADER, doc.title, #27'[0m');
-
-  if not print_lines then
-  begin
-    writeln(converted);
-    halt;
-  end;
-
-  converted_lines := SplitString(converted, sLineBreak);
-  for i := 0 to Length(converted_lines) - 1 do
-    writeln(Format('%.3d %s', [i+1, converted_lines[i]]));
+  Assign(out_file, out_path);
+  ReWrite(out_file);
+  Write(out_file, converted);
+  Close(out_file);
 end.
