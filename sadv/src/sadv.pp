@@ -106,6 +106,8 @@ begin
     for meta in doc.meta_data do
       writeln('meta-data: ', meta.name, ': ', meta.content);
 
+  writeln(STYLE_HEADER, doc.title, #27'[0m');
+
   if not print_lines then
   begin
     writeln(converted);
