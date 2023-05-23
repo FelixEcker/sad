@@ -14,10 +14,10 @@ By default, the File will be Formatted using ANSI-escapes and output to STDOUT. 
 | -l  / --lines |            | Print linenumbers alongside the converted output |
 
 ## Installation
-**AUR** <br>
-You can find sadv on the AUR [here](https://aur.archlinux.org/packages/sadv). <br>
+### AUR <br>
+sadv is part of the sadsuite AUR package.
 
-**From Source**
+### Source
 ```bash
 git clone https://github.com/FelixEcker/sad.git
 cd sad

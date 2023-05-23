@@ -1,5 +1,5 @@
 * {
-  font-family: monospace /* georgia, serif*/;
+  font-family: georgia, serif;
   text-align: left;
 }
 
@@ -8,6 +8,11 @@ div {
   width: 50%;
   margin: auto;
   padding: 10px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
 }
 
 div>div {
@@ -91,7 +96,7 @@ h4 {
   color: white;
 }
 
-.sytlebold {
+.stylebold {
   font-weight: bold;
 }
 
