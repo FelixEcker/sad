@@ -25,10 +25,10 @@ By default, the File will be Formatted using ANSI-escapes and output to STDOUT. 
 | -l  / --lines |            | Print linenumbers alongside the converted output |
 
 ### Installation
-**AUR** <br>
-You can find sadv on the AUR [here](https://aur.archlinux.org/packages/sadv). <br>
+#### AUR
+sadv is part of the sadsuite aur package.
 
-**From Source**
+#### Source
 ```bash
 git clone https://github.com/FelixEcker/sad.git
 cd sad/sadv
@@ -52,6 +52,10 @@ By default, the generated html will be saved at the same location with the exten
 | -s  / --style | file       | Specify the Stylesheet file |
 
 ### Installation
+#### AUR
+sadhtml is part of the sadsuite aur package.
+
+#### Source
 ```bash
 git clone https://github.com/FelixEcker/sad.git
 cd sad/sadhtml
