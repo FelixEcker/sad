@@ -73,6 +73,8 @@ interface
   function ParseStructure(var ADocument: TSADocument): Boolean;
   function ParseSection(const ASection: TSection;
                         const ADoChildren: Boolean): String;
+  function FindSectionByPath(const ADocument: TSADocument;
+                             const APath: String): TSection;
 {$IFDEF DEBUG}
   procedure DebugPrintDocument(const ADocument: TSADocument);
 {$ENDIF}
@@ -161,6 +163,31 @@ implementation
     FindSection := _FindSection(ADocument.root_section, AName);
   end;
 
+  function FindSectionByPath(const ADocument: TSADocument;
+                             const APath: String): TSection;
+  var
+    path_split: TStringDynArray;
+    elem: String;
+    curr_sec: PSection;
+    sec: TSection;
+  begin
+    path_split := SplitString(APath, ':');
+    
+    curr_sec := @ADocument.root_section;
+    for elem in path_split do
+    begin
+      for sec in curr_sec^.children do
+      begin
+        if sec.name = elem then
+        begin
+          curr_sec := @sec;
+          break;
+        end;
+      end;
+    end;
+
+    exit(curr_sec^);
+  end;
 
   function ParseStructure(var ADocument: TSADocument): Boolean;
   var
