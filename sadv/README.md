@@ -12,6 +12,10 @@ By default, the File will be Formatted using ANSI-escapes and output to STDOUT. 
 | ------------- | ---------- | ----------------------------------- |
 | -pm / --meta  |            | Prints the documents Meta-Data      |
 | -l  / --lines |            | Print linenumbers alongside the converted output |
+| --sections    |            | List all sections within a document in a tree-format |
+
+The last parameter may be an absolute path to a specific section, the path
+seperator is a colon (`:`).
 
 ## Installation
 ### AUR <br>

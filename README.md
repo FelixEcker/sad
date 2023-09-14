@@ -8,60 +8,17 @@ program like sadv. Formatting is handled through `mode-switches` in plain text.
 This Repository has Pascal-Units for parsing a sad file, you may use these Units in your projects
 as long as you follow the license specified in the LICENSE file and in the source.
 
-## sadv
-sadv(iewer) uses these Units for displaying a sad in console or converting it to HTML.
-Its source code can be found in the `sadv` subdirectory.
+## sadsuite
+The sadsuite is a collection of programs used to process and display sads.
+Many of the sadsuite programs are collected and developed within this
+repository.
 
-### Usage
-`sadv <file> [parameters] [:section]` <br>
+Programs belonging to the sadsuite are:
+* sadv: A CLI sad viewer program
+* sadhtml: A tool for converting a sad to a html document
 
-By default, the File will be Formatted using ANSI-escapes and output to STDOUT. <br>
+All of these programs can be installed from the `sadsuite` AUR package.
 
-**Parameters** <br>
-
-| Name          | Parameters | Description                         |
-| ------------- | ---------- | ----------------------------------- |
-| -pm / --meta  |            | Prints the documents Meta-Data      |
-| -l  / --lines |            | Print linenumbers alongside the converted output |
-
-### Installation
-#### AUR
-sadv is part of the sadsuite aur package.
-
-#### Source
-```bash
-git clone https://github.com/FelixEcker/sad.git
-cd sad/sadv
-sh install.sh
-```
-
-## sadhtml
-sadhtml is a tool to convert sad files to html documents.
-
-### Usage
-`sadhtml <file> [parameters] [:section]` <br>
-
-By default, the generated html will be saved at the same location with the extension
-`.sad.html`<br>
-
-**Parameters** <br>
-
-| Name          | Parameters | Description                 |
-| ------------- | ---------- | --------------------------- |
-| -o  / --out   | file       | Specify the Output file     |
-| -s  / --style | file       | Specify the Stylesheet file |
-
-### Installation
-#### AUR
-sadhtml is part of the sadsuite aur package.
-
-#### Source
-```bash
-git clone https://github.com/FelixEcker/sad.git
-cd sad/sadhtml
-sh build.sh
-sudo mv out/sadhtml /usr/bin/sadhtml
-```
 ## Features and Limitations
 **Features** <br>
 * Supports Formatting using Standard ANSI codes (see `Styles and Colors` in `Example` section)
