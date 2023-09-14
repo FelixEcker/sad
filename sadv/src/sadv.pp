@@ -66,7 +66,7 @@ begin
 end;
 
 const
-  VERSION = '1.3.0';
+  VERSION = '1.4.0';
 var
   i: Integer;
   path, required_section, cparam: String;
