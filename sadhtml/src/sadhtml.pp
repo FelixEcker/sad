@@ -122,7 +122,7 @@ begin
   DebugPrintDocument(doc);
 {$ENDIF}
 
-  converted := GenerateHTML(FindSection(doc, required_section), True,
+  converted := GenerateHTML(FindSectionByPath(doc, required_section), True,
                             style_path);
 
   Assign(out_file, out_path);
