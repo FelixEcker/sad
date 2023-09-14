@@ -137,7 +137,7 @@ begin
     halt;
   end;
 
-  converted := ParseSection(FindSection(doc, required_section), True);
+  converted := ParseSection(FindSectionByPath(doc, required_section), True);
 
   if print_meta then
     for meta in doc.meta_data do
