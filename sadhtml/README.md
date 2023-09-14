@@ -14,6 +14,9 @@ By default, the generated html will be saved at the same location with the exten
 | -o  / --out   | file       | Specify the Output file     |
 | -s  / --style | file       | Specify the Stylesheet file |
 
+The last parameter may be an absolute path to a specific section, the path
+seperator is a colon (`:`).
+
 ## Installation
 ```bash
 git clone https://github.com/FelixEcker/sad.git
