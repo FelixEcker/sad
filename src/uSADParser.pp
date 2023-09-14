@@ -70,11 +70,11 @@ interface
                             const AJoinStr: String): String;
   function FindSection(const ADocument: TSADocument;
                      const AName: String): TSection;
+  function FindSectionByPath(const ADocument: TSADocument;
+                             const APath: String): TSection;
   function ParseStructure(var ADocument: TSADocument): Boolean;
   function ParseSection(const ASection: TSection;
                         const ADoChildren: Boolean): String;
-  function FindSectionByPath(const ADocument: TSADocument;
-                             const APath: String): TSection;
 {$IFDEF DEBUG}
   procedure DebugPrintDocument(const ADocument: TSADocument);
 {$ENDIF}
