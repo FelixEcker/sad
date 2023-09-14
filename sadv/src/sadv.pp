@@ -3,7 +3,7 @@ program sadv;
 
 {         sadv - Simple Ansi Document Viewer          }
 {                                                     }
-{ Author: Felix Eckert                                }
+{ Author: Marie Eckert                                }
 { Licensed under the 3-Clause BSD License. See below. }
 
 (* Copyright (c) 2022, Marie Eckert                                           *)
