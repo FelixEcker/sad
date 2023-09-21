@@ -42,7 +42,7 @@ uses SysUtils, uSADParser, uSADHTML, uPathResolve;
 
 const
   DEFAULT_STYLESHEET = '$HOME/.config/sadhtml/default.css';
-  VERSION = '1.0.0';
+  VERSION = '1.1.0';
 var
   i: Integer;
   path, out_path, style_path, required_section, cparam: String;
@@ -122,7 +122,7 @@ begin
   DebugPrintDocument(doc);
 {$ENDIF}
 
-  converted := GenerateHTML(FindSection(doc, required_section), True,
+  converted := GenerateHTML(FindSectionByPath(doc, required_section), True,
                             style_path);
 
   Assign(out_file, out_path);

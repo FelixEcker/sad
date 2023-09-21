@@ -3,7 +3,7 @@ program sadv;
 
 {         sadv - Simple Ansi Document Viewer          }
 {                                                     }
-{ Author: Felix Eckert                                }
+{ Author: Marie Eckert                                }
 { Licensed under the 3-Clause BSD License. See below. }
 
 (* Copyright (c) 2022, Marie Eckert                                           *)
@@ -38,14 +38,41 @@ program sadv;
 
 uses SysUtils, Types, StrUtils, uPathResolve, uSADParser, dos;
 
+procedure ListSections(var ADoc: TSADocument);
+  procedure PrintIndent(const AAmount: Integer);
+  var
+    i: Integer;
+  begin
+    for i := 0 to AAmount - 1 do
+      write('  ');
+  end;
+
+  procedure PrintSections(const ASec: TSection; const ALevel: Integer);
+  var
+    sec: TSection;
+  begin
+    for sec in ASec.children do
+    begin
+      PrintIndent(ALevel);
+      writeln(':', sec.name);
+      PrintSections(sec, ALevel+1);
+    end;
+  end;
+var
+  indent_level: Integer;
+begin
+  writeln(':', ADoc.root_section.name);
+  PrintSections(ADoc.root_section, 1);
+end;
+
 const
-  VERSION = '1.3.0';
+  VERSION = '1.4.0';
 var
   i: Integer;
   path, required_section, cparam: String;
   converted: String;
   converted_lines: TStringDynArray;
-  print_meta, print_lines: Boolean;
+  print_meta, print_lines, list_sections: Boolean;
   doc: TSADocument;
   meta: TMetaData;
 begin
@@ -57,6 +84,7 @@ begin
     writeln('Parameters: ');
     writeln('-pm, --meta          Print Meta-Information');
     writeln('-l,  --lines         Print Line-Numbers');
+    writeln('     --sections      List all sections');
     writeln;
     halt;
   end;
@@ -72,6 +100,7 @@ begin
   required_section := '.';
   print_meta := False;
   print_lines := False;
+  list_sections := False;
   for i := 2 to ParamCount() do
   begin
     cparam := ParamStr(i);
@@ -84,7 +113,9 @@ begin
     if (cparam = '-pm') or (cparam = '--meta') then
       print_meta := True
     else if (cparam = '-l') or (cparam = '--lines') then
-      print_lines := True;
+      print_lines := True
+    else if (cparam = '--sections') then
+      list_sections := True;
   end;
 
   Assign(doc.doc_file, path);
@@ -100,7 +131,13 @@ begin
   DebugPrintDocument(doc);
 {$ENDIF}
 
-  converted := ParseSection(FindSection(doc, required_section), True);
+  if list_sections then
+  begin
+    ListSections(doc);
+    halt;
+  end;
+
+  converted := ParseSection(FindSectionByPath(doc, required_section), True);
 
   if print_meta then
     for meta in doc.meta_data do
