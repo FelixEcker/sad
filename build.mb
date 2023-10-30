@@ -1,6 +1,6 @@
 sector .config
   fields mariebuild:
-    str outdir 'sadsuite_bin'
+    str outdir 'sadsuite'
     str inc    'sadv/inc/'
 
     list files 'sadv/src/sadv.pp:sadhtml/src/sadhtml.pp'
@@ -11,10 +11,10 @@ sector .config
 sector .scripts
   lines prepare:
 echo ==\> Preparing build...
-if [[ -d sadsuite_bin ]]; then
+if [[ -d sadsuite ]]; then
   echo ==\> Cleaned outdir
-  rm -rf sadsuite_bin
+  rm -rf sadsuite
 fi
 
-mkdir sadsuite_bin
+mkdir sadsuite
 echo ==\> Ready for build!
