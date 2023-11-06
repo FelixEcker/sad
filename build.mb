@@ -1,0 +1,20 @@
+sector .config
+  fields mariebuild:
+    str outdir 'sadsuite'
+    str inc    'sadv/inc/'
+
+    list files 'sadv/src/sadv.pp:sadhtml/src/sadhtml.pp'
+
+    str comp_cmd 'fpc -FE"$(outdir)" -Fu"$(inc)" $(file) -O4 -Xs -XX'
+    str finalize_cmd 'rm $(outdir)/*.*'
+
+sector .scripts
+  lines prepare:
+echo ==\> Preparing build...
+if [[ -d sadsuite ]]; then
+  echo ==\> Cleaned outdir
+  rm -rf sadsuite
+fi
+
+mkdir sadsuite
+echo ==\> Ready for build!
