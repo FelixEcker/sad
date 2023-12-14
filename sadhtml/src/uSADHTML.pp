@@ -98,7 +98,7 @@ implementation
                                 MergeStringArray(
                                 Copy(line_split, i+1, Length(line_split)-1),
                                 ' '
-                              ) + '</h1>';
+                              ) + '</h2>';
         end;
         SUB_HEADER: begin
           skip := Length(line_split);
@@ -106,7 +106,7 @@ implementation
                                 MergeStringArray(
                                 Copy(line_split, i+1, Length(line_split)-1),
                                 ' '
-                              ) + '</h1>';
+                              ) + '</h3>';
         end;
         STYLE, COLOR: begin
           if Length(line_split) <= i+1 then
