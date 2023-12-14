@@ -47,7 +47,7 @@ var
   i: Integer;
   path, out_path, style_path, required_section, cparam: String;
   converted: String;
-  linked_css: Boolean;
+  linked_css, no_nbsp: Boolean;
   doc: TSADocument;
   conversion_opts: TConversionOpts;
   out_file: TextFile;
@@ -61,6 +61,7 @@ begin
     writeln('-o,  --out   <file>  Specify output file');
     writeln('-s,  --style <file>  Override default Stylesheet');
     writeln('--linked-css         Link to the Stylesheet instead of embedding its source');
+    writeln('--no-nbsp            Disable non-breaking-spaces in output');
     writeln;
     halt;
   end;
@@ -97,7 +98,9 @@ begin
     end else if (cparam = '--out') then
       out_path := ParamStr(i+1)
     else if (cparam = '--linked-css') then
-      linked_css := True;
+      linked_css := True
+    else if (cparam = '--no-nbsp') then
+      no_nbsp := True;
   end;
 
   style_path := ResolveEnvsInPath(style_path);
@@ -124,6 +127,7 @@ begin
   conversion_opts.do_children := True;
   conversion_opts.linked_css := linked_css;
   conversion_opts.style_path := style_path;
+  conversion_opts.nbsp := not no_nbsp;
   converted := GenerateHTML(FindSectionByPath(doc, required_section), 
                             conversion_opts);
 

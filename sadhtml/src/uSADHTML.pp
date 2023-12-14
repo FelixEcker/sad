@@ -41,11 +41,13 @@ interface
     TConversionOpts = record
       do_children: Boolean;
       linked_css: Boolean;
+      nbsp: Boolean;
       style_path: String;
     end;
 
   function HTMLParseSection(const ASection: TSection;
-                            const ADoChildren: Boolean): String;
+                            const ADoChildren: Boolean;
+                            const ANBSP: Boolean): String;
   function GenerateHTML(const ASection: TSection;
                         const AOpts: TConversionOpts): String;
 implementation
@@ -60,7 +62,8 @@ implementation
   { Public Procedures/Functions }
 
   function HTMLParseSection(const ASection: TSection;
-                            const ADoChildren: Boolean): String;
+                            const ADoChildren: Boolean;
+                            const ANBSP: Boolean): String;
   var
     lines, line_split, styles, colors: TStringDynArray;
     preserve_mode, current_line, tmp: String;
@@ -163,12 +166,16 @@ implementation
           { Leave out any unimplemented Switches }
           if pos('{$', line_split[i]) = 1 then
             continue;
-          HTMLParseSection := HTMLParseSection + StringReplace(
-                                                    line_split[i],
-                                                    ' ',
-                                                    '&nbsp;',
-                                                    [rfReplaceAll]
-                                                  ) + '&nbsp;';
+          if ANBSP then
+            tmp := StringReplace(
+                                line_split[i],
+                                ' ',
+                                '&nbsp;',
+                                [rfReplaceAll]
+                              ) + '&nbsp;'
+          else
+            tmp := line_split[i] + ' ';
+          HTMLParseSection := HTMLParseSection + tmp;
         end;
         end;
       end;
@@ -178,7 +185,8 @@ implementation
 
     if ADoChildren then
       for section in ASection.children do
-        HTMLParseSection := HTMLParseSection + HTMLParseSection(section, True);
+        HTMLParseSection := HTMLParseSection + HTMLParseSection(section, True, 
+                                                                ANBSP);
 
     HTMLParseSection := HTMLParseSection + '</div>';
   end;
@@ -213,7 +221,7 @@ implementation
     if (author <> '') and (date <> '') then
       cont := cont + '<h4>' + author + ', ' + date +'</h4>';
 
-    cont := cont + HTMLParseSection(ASection, AOpts.do_children);
+    cont := cont + HTMLParseSection(ASection, AOpts.do_children, AOpts.nbsp);
 
     { Format and return }
 
