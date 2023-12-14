@@ -47,9 +47,10 @@ var
   i: Integer;
   path, out_path, style_path, required_section, cparam: String;
   converted: String;
-  print_meta: Boolean;
+  print_meta, linked_css: Boolean;
   doc: TSADocument;
   meta: TMetaData;
+  conversion_opts: TConversionOpts;
   out_file: TextFile;
 begin
   if (ParamCount() = 0) then
@@ -61,6 +62,7 @@ begin
     writeln('-o,  --out   <file>  Specify output file');
     {writeln('-m,  --meta          Include Meta-Information');}
     writeln('-s,  --style <file>  Override default Stylesheet');
+    writeln('--linked-css         Link to the Stylesheet instead of embedding its source');
     writeln;
     halt;
   end;
@@ -98,7 +100,9 @@ begin
 
       style_path := ParamStr(i+1);
     end else if (cparam = '-s') or (cparam = '--out') then
-      out_path := ParamStr(i+1);
+      out_path := ParamStr(i+1)
+    else if (cparam = '--linked-css') then
+      linked_css := True;
   end;
 
   style_path := ResolveEnvsInPath(style_path);
@@ -122,8 +126,11 @@ begin
   DebugPrintDocument(doc);
 {$ENDIF}
 
-  converted := GenerateHTML(FindSectionByPath(doc, required_section), True,
-                            style_path);
+  conversion_opts.do_children := True;
+  conversion_opts.linked_css := linked_css;
+  conversion_opts.style_path := style_path;
+  converted := GenerateHTML(FindSectionByPath(doc, required_section), 
+                            conversion_opts);
 
   Assign(out_file, out_path);
   ReWrite(out_file);

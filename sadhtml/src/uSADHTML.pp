@@ -37,11 +37,17 @@ unit uSADHTML;
 interface
   uses SysUtils, StrUtils, Types, uSADParser;
 
+  type 
+    TConversionOpts = record
+      do_children: Boolean;
+      linked_css: Boolean;
+      style_path: String;
+    end;
+
   function HTMLParseSection(const ASection: TSection;
                             const ADoChildren: Boolean): String;
   function GenerateHTML(const ASection: TSection;
-                        const ADoChildren: Boolean;
-                        const AStylePath: String): String;
+                        const AOpts: TConversionOpts): String;
 implementation
   { Private Procedures/Functions }
 
@@ -178,8 +184,7 @@ implementation
   end;
 
   function GenerateHTML(const ASection: TSection;
-                        const ADoChildren: Boolean;
-                        const AStylePath: String): String;
+                        const AOpts: TConversionOpts): String;
   var
     style_file: TextFile;
     style, cont, tmp, author, date: String;
@@ -191,7 +196,7 @@ implementation
                     '</html>';
 
     { Read style }
-    Assign(style_file, AStylePath);
+    Assign(style_file, AOpts.style_path);
     ReSet(style_file);
 
     style := '';
@@ -215,7 +220,7 @@ implementation
     if (author <> '') and (date <> '') then
       cont := cont + '<h4>' + author + ', ' + date +'</h4>';
 
-    cont := cont + HTMLParseSection(ASection, ADoChildren);
+    cont := cont + HTMLParseSection(ASection, AOpts.do_children);
 
     { Format and return }
     GenerateHTML := Format(GenerateHTML,
