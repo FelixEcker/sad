@@ -94,7 +94,7 @@ begin
       end;
 
       style_path := ParamStr(i+1);
-    end else if (cparam = '-s') or (cparam = '--out') then
+    end else if (cparam = '--out') then
       out_path := ParamStr(i+1)
     else if (cparam = '--linked-css') then
       linked_css := True;
