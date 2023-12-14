@@ -47,9 +47,8 @@ var
   i: Integer;
   path, out_path, style_path, required_section, cparam: String;
   converted: String;
-  print_meta, linked_css: Boolean;
+  linked_css: Boolean;
   doc: TSADocument;
-  meta: TMetaData;
   conversion_opts: TConversionOpts;
   out_file: TextFile;
 begin
@@ -60,7 +59,6 @@ begin
     writeln;
     writeln('Parameters: ');
     writeln('-o,  --out   <file>  Specify output file');
-    {writeln('-m,  --meta          Include Meta-Information');}
     writeln('-s,  --style <file>  Override default Stylesheet');
     writeln('--linked-css         Link to the Stylesheet instead of embedding its source');
     writeln;
@@ -78,7 +76,6 @@ begin
   out_path := path+'.html';
   style_path := DEFAULT_STYLESHEET;
   required_section := '.';
-  print_meta := False;
   for i := 2 to ParamCount() do
   begin
     cparam := ParamStr(i);
@@ -87,10 +84,8 @@ begin
       required_section := Copy(cparam, 2, Length(cparam));
       break;
     end;
-
-    if (cparam = '-m') or (cparam = '--meta') then
-      print_meta := True
-    else if (cparam = '-s') or (cparam = '--style') then
+    
+    if (cparam = '-s') or (cparam = '--style') then
     begin
       if ParamCount() < i+1 then
       begin
