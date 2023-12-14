@@ -185,27 +185,20 @@ implementation
 
   function GenerateHTML(const ASection: TSection;
                         const AOpts: TConversionOpts): String;
+  const
+    EMBEDDED_CSS_HTML_TEMPLATE = '<!DOCTYPE html>'+
+                    '<html><head><title>%s</title><meta charset="utf-8" />'+
+                    '</head><body><style>%s</style><center>%s</center></body>'+
+                    '</html>';
+    LINKED_CSS_HTML_TEMPLATE = '<!DOCTYPR html>'+
+                    '<html><head><title>%s</title><meta charset="utf-8" />'+
+                    '<link type="text/css" rel="stylesheet" href="%s" />'+
+                    '</head><body><center>%s</center></body></html>';
   var
     style_file: TextFile;
     style, cont, tmp, author, date: String;
     meta: TMetaData;
   begin
-    GenerateHTML := '<!DOCTYPE html>'+
-                    '<html><head><title>%s</title><meta charset="utf-8" />'+
-                    '</head><body><style>%s</style><center>%s</center></body>'+
-                    '</html>';
-
-    { Read style }
-    Assign(style_file, AOpts.style_path);
-    ReSet(style_file);
-
-    style := '';
-    while not eof(style_file) do
-    begin
-      ReadLn(style_file, tmp);
-      style := style + tmp + sLineBreak;
-    end;
-
     { Parse to HTML }
     cont := '<h1>' + ASection.owning_document^.title + '</h1><br />';
 
@@ -223,12 +216,37 @@ implementation
     cont := cont + HTMLParseSection(ASection, AOpts.do_children);
 
     { Format and return }
-    GenerateHTML := Format(GenerateHTML,
-      [
-        ASection.owning_document^.title,
-        style,
-        cont
-      ]
-    );
+
+    if not AOpts.linked_css then
+    begin
+      { Read style }
+      Assign(style_file, AOpts.style_path);
+      ReSet(style_file);
+
+      style := '';
+      while not eof(style_file) do
+      begin
+        ReadLn(style_file, tmp);
+        style := style + tmp + sLineBreak;
+      end;
+
+      Close(style_file);
+     
+      GenerateHTML := Format(EMBEDDED_CSS_HTML_TEMPLATE,
+        [
+          ASection.owning_document^.title,
+          style,
+          cont
+        ]
+      );
+    end
+    else
+      GenerateHTML := Format(LINKED_CSS_HTML_TEMPLATE, 
+                              [
+                                AOpts.style_path,
+                                ASection.owning_document^.title,
+                                cont
+                              ]
+                      );
   end;
 end.
